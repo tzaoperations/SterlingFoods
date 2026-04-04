@@ -11,9 +11,9 @@ import Squid from './pages/SquidPage'; // <-- Added Squid (Active)
 // Commented out until we actually write the code for these pages!
 import Shrimp from './pages/Shrimp'; // <-- Added Shrimp (Pending)
 // import Sourcing from './pages/Sourcing';
-// import Processing from './pages/Processing';
+import Processing from './pages/Processing';
 import GlobalPresence from './pages/GlobalPresence';
-// import Contact from './pages/Contact';
+import Contact from './pages/Contact';
 // import Yacht from './pages/Yacht';
 
 function App() {
@@ -34,9 +34,9 @@ function App() {
             */}
             <Route path="/shrimp" element={<Shrimp />} />
             {/* <Route path="/sourcing" element={<Sourcing />} /> */}
-            {/* <Route path="/processing" element={<Processing />} /> */}
+            <Route path="/processing" element={<Processing />} />
             <Route path="/global-presence" element={<GlobalPresence />} />
-            {/* <Route path="/contact" element={<Contact />} /> */}
+            <Route path="/contact" element={<Contact />} />
             {/* <Route path="/yacht" element={<Yacht />} /> */}
           </Routes>
         </main>
