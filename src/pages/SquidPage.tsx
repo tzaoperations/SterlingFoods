@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 
 // --- Asset Imports ---
@@ -170,12 +171,14 @@ const SquidPage = () => {
           </p>
           
           <div className="mt-[0.5cqw]">
-             <div className="flex flex-row items-center gap-[6px] cursor-pointer group w-max">
-              <span className="w-[6px] h-[6px] rounded-full bg-[#C7D2D9] shrink-0 group-hover:scale-150 transition-transform duration-300" />
-              <span className="font-poppins text-[#C7D2D9] uppercase tracking-wider group-hover:opacity-70 transition-opacity duration-300" style={{ fontSize: 'clamp(0.7rem, 0.83cqw, 16px)' }}>
-                View Details
-              </span>
-            </div>
+             <Link to="/shrimp">
+               <div className="flex flex-row items-center gap-[6px] cursor-pointer group w-max">
+                <span className="w-[6px] h-[6px] rounded-full bg-[#C7D2D9] shrink-0 group-hover:scale-150 transition-transform duration-300" />
+                <span className="font-poppins text-[#C7D2D9] uppercase tracking-wider group-hover:opacity-70 transition-opacity duration-300" style={{ fontSize: 'clamp(0.7rem, 0.83cqw, 16px)' }}>
+                  View Details
+                </span>
+              </div>
+            </Link>
           </div>
         </div>
 

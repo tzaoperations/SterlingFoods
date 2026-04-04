@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform, type Variants, type MotionValue } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 
 // --- Asset Imports ---
@@ -204,7 +205,9 @@ const ProductsPage = () => {
             </motion.p>
             
             <motion.div variants={fadeUp} className="mt-2">
-              <DotLink label="View Details" />
+              <Link to="/shrimp">
+                <DotLink label="View Details" />
+              </Link>
             </motion.div>
           </div>
 
@@ -223,7 +226,9 @@ const ProductsPage = () => {
             </motion.p>
             
             <motion.div variants={fadeUp} className="mt-2">
-              <DotLink label="View Details" />
+              <Link to="/squid">
+                <DotLink label="View Details" />
+              </Link>
             </motion.div>
           </div>
         </motion.div>
@@ -282,7 +287,9 @@ const ProductsPage = () => {
           </motion.p>
           
           <motion.div variants={fadeUp}>
-            <DotLink label="Explore Yacht" />
+            <Link to="/yacht">
+              <DotLink label="Explore Yacht" />
+            </Link>
           </motion.div>
         </motion.div>
       </div>
