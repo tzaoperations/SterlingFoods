@@ -113,7 +113,7 @@ const SourcingPage = () => {
             CONSISTENCY BEGINS <br/> BEFORE PROCESSING
           </motion.h1>
 
-          <motion.p variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="absolute left-[31%] top-[83.3%] w-[38%] text-center font-poppins font-light text-[#A2ADB4] leading-[1.2]" style={{ fontSize: 'clamp(0.8rem, 1.25cqw, 24px)' }}>
+          <motion.p variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="absolute left-[31%] top-[90.3%] w-[38%] text-center font-poppins font-light text-[#A2ADB4] leading-[1.2]" style={{ fontSize: 'clamp(0.8rem, 1.25cqw, 24px)' }}>
             Where every choice is intentional, and consistency begins long before production
           </motion.p>
         </div>
