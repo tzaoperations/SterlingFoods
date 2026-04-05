@@ -1,4 +1,6 @@
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
 
 // --- Asset Imports ---
@@ -14,18 +16,42 @@ import mainImg from '../assets/images/products/squid/main.png';
 import shrimpImg from '../assets/images/products/shrimp.png';
 import starImg from '../assets/images/products/squid/star.png';
 
+// --- Dynamic Data for the Hover Section ---
+const productShapes = [
+  { id: 'whole', label: 'Whole Squid', image: hoverImg },
+  { id: 'rings', label: 'Squid Rings', image: hoverImg },
+  { id: 'tube', label: 'Squid Tube', image: hoverImg },
+  { id: 'tentacles', label: 'Squid Tentacles', image: hoverImg },
+];
+
 const SquidPage = () => {
-  // CRITICAL FIX: The translateY is now negative (-0.05em) to lift the letter up to the baseline!
-  // Added whitespace-nowrap and explicit <br /> support to force exact Figma line breaks.
+  // --- Cursor Tracking State for Section 2 ---
+  const [hoveredShape, setHoveredShape] = useState<string | null>(null);
+  const section2Ref = useRef<HTMLDivElement>(null);
+  
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Tightened spring physics for a more responsive follow
+  const springX = useSpring(mouseX, { stiffness: 150, damping: 20, mass: 1 });
+  const springY = useSpring(mouseY, { stiffness: 150, damping: 20, mass: 1 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!section2Ref.current) return;
+    const rect = section2Ref.current.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left);
+    mouseY.set(e.clientY - rect.top);
+  };
+
   const MixedHeading = ({ firstLetter, restOfText, className, style }: { firstLetter: React.ReactNode, restOfText: React.ReactNode, className?: string, style?: React.CSSProperties }) => (
     <h2 className={`text-[#C7D2D9] ${className}`} style={style}>
       <span className="font-seasons uppercase leading-[1.1]">
         <span style={{ 
           fontFamily: "'Corinthia', cursive", 
-          fontSize: '1.3em', // Scaled down from 1.5em so it matches better
+          fontSize: '1.3em', 
           textTransform: 'none', 
           display: 'inline-block', 
-          transform: 'translateY(-0.05em)', // Pulled UP instead of pushed down
+          transform: 'translateY(-0.05em)', 
           marginRight: '4px' 
         }}>
           {firstLetter}
@@ -44,19 +70,9 @@ const SquidPage = () => {
       ═══════════════════════════════════════════════════ */}
       <div className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[800px] mt-[100px]" style={{ containerType: 'inline-size' }}>
         
-        <img 
-          src={squid2Img} 
-          alt="Whole squid" 
-          className="absolute left-[4.06%] top-[7%] w-[10.52%] h-[22.59%] object-cover shadow-2xl" 
-        />
+        <img src={squid2Img} alt="Whole squid" className="absolute left-[4.06%] top-[7%] w-[10.52%] h-[22.59%] object-cover shadow-2xl" />
+        <img src={squidImg} alt="Squid close-up" className="absolute left-[58.54%] top-[7%] w-[38.33%] h-[81.57%] object-cover shadow-2xl" />
 
-        <img 
-          src={squidImg} 
-          alt="Squid close-up" 
-          className="absolute left-[58.54%] top-[7%] w-[38.33%] h-[81.57%] object-cover shadow-2xl" 
-        />
-
-        {/* Scaled down to max 80px */}
         <MixedHeading 
           firstLetter="S" 
           restOfText="QUID"
@@ -75,37 +91,70 @@ const SquidPage = () => {
       {/* ═══════════════════════════════════════════════════
           SECTION 2 — THE WAYS OUR PRODUCT TAKES SHAPE
       ═══════════════════════════════════════════════════ */}
-      <div className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[800px]" style={{ containerType: 'inline-size' }}>
+      <div 
+        ref={section2Ref}
+        onMouseMove={handleMouseMove}
+        className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[800px] overflow-hidden" 
+        style={{ containerType: 'inline-size' }}
+      >
         
-        {/* Exact Figma line break using <br /> */}
         <MixedHeading 
           firstLetter="T" 
           restOfText={<>HE WAYS OUR <br /> PRODUCT TAKES SHAPE</>}
-          className="absolute left-[3.125%] top-[6.74%] w-max whitespace-nowrap"
+          className="absolute left-[3.125%] top-[6.74%] w-max whitespace-nowrap z-30 pointer-events-none"
           style={{ fontSize: 'clamp(1.8rem, 3.5cqw, 72px)' }} 
         />
 
-        <img 
-          src={hoverImg} 
-          alt="Squid rings" 
-          className="absolute left-[47.03%] top-[25.64%] w-[19.73%] h-[33.51%] object-cover shadow-2xl z-10" 
-        />
-
+        {/* Dynamic Text List */}
         <div 
-          className="absolute left-[34.79%] top-[42.4%] w-[27.96%] flex flex-col gap-[2cqw] z-20"
+          className="absolute left-[34.79%] top-[42.4%] w-[27.96%] flex flex-col gap-[2cqw] z-40"
           style={{ fontSize: 'clamp(1.2rem, 2.5cqw, 48px)' }}
         >
-          <div className="font-seasons capitalize text-[#A2ADB4]">Whole Squid</div>
-          <div className="font-seasons capitalize italic text-[#C7D2D9]">Squid Rings</div>
-          <div className="font-seasons capitalize text-[#A2ADB4]">Squid Tube</div>
-          <div className="font-seasons capitalize text-[#A2ADB4]">Squid Tentacles</div>
+          {productShapes.map((shape) => (
+            <div 
+              key={shape.id}
+              onMouseEnter={() => setHoveredShape(shape.id)}
+              onMouseLeave={() => setHoveredShape(null)}
+              // Changed from transition-all to transition-colors so italic snaps instantly
+              className={`font-seasons capitalize cursor-default transition-colors duration-150 w-max ${
+                hoveredShape === shape.id 
+                  ? 'italic text-[#C7D2D9]' 
+                  : 'text-[#A2ADB4]'
+              }`}
+            >
+              {shape.label}
+            </div>
+          ))}
         </div>
+
+        {/* The Trailing Cursor Image */}
+        <AnimatePresence>
+          {hoveredShape && (
+            <motion.img 
+              key="cursor-image"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              src={productShapes.find(s => s.id === hoveredShape)?.image} 
+              alt="Shape Preview" 
+              className="absolute top-0 left-0 w-[19.73%] h-[33.51%] object-cover shadow-2xl z-20 pointer-events-none" 
+              style={{
+                x: springX,
+                y: springY,
+                // These coordinates put the bottom-left corner directly on the cursor
+                translateX: '0%',
+                translateY: '-100%'
+              }}
+            />
+          )}
+        </AnimatePresence>
 
         {/* Decorative Star Image */}
         <img 
           src={starImg} 
           alt="Decorative star"
-          className="absolute left-[88.43%] top-[79.44%] w-[8.43%] h-auto object-contain" 
+          className="absolute left-[88.43%] top-[79.44%] w-[8.43%] h-auto object-contain z-10 pointer-events-none" 
         />
       </div>
 
@@ -114,7 +163,6 @@ const SquidPage = () => {
       ═══════════════════════════════════════════════════ */}
       <div className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[800px]" style={{ containerType: 'inline-size' }}>
         
-        {/* Exact Figma line break using <br /> */}
         <MixedHeading 
           firstLetter="I" 
           restOfText={<>N ITS <br /> TRUE FORM</>}
@@ -147,7 +195,6 @@ const SquidPage = () => {
       ═══════════════════════════════════════════════════ */}
       <div className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[600px]" style={{ containerType: 'inline-size' }}>
         
-        {/* Pinned to the Right side and forced into two lines */}
         <MixedHeading 
           firstLetter="Y" 
           restOfText={<>OU MAY ALSO <br /> LIKE TO VIEW</>}
