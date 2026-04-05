@@ -1,4 +1,5 @@
-import { motion, type Variants } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
 
 // --- Asset Imports ---
@@ -19,42 +20,56 @@ import fssai from '../assets/images/standards/fssai.png';
 import brc from '../assets/images/standards/brc.png';
 import fda from '../assets/images/standards/fda.png';
 
+// --- Data Mapping (Updated to match the perfected Home Page array) ---
 const exportLocations = [
   { 
     id: 'us', 
-    country: 'UNITED STATES', 
-    top: '46%', left: '20%', 
-    textTop: '48%', textLeft: '11%', textAlign: 'right',
+    country: 'UNITED STATES OF AMERICA', 
+    // Shifted slightly right to sit squarely on the US landmass
+    top: '34%', left: '22%', 
+    products: ['Premium Squid - YACHT'] 
   },
   { 
     id: 'eu', 
-    country: 'EUROPE', 
-    top: '38%', left: '48%', 
-    textTop: '30%', textLeft: '40%', textAlign: 'right',
+    country: 'FRANCE', 
+    // Perfectly positioned over Central/Western Europe
+    top: '28%', left: '49%', 
+    products: ['Black Tiger Shrimp'] 
   },
   { 
-    id: 'me', 
-    country: 'MIDDLE EAST', 
-    top: '48%', left: '56%', 
-    textTop: '52%', textLeft: '50%', textAlign: 'right',
+    id: 'za', 
+    country: 'SOUTH AFRICA', 
+    // Snapped to the southern tip of the African continent
+    top: '74%', left: '53%', 
+    products: ['Green Mussels'] 
   },
   { 
-    id: 'in', 
-    country: 'INDIA', 
-    top: '52%', left: '68%', 
-    textTop: '58%', textLeft: '63%', textAlign: 'right',
+    id: 'th', 
+    country: 'THAILAND', 
+    // Shifted down and right into Southeast Asia
+    top: '52%', left: '73%', 
+    products: ['Indian Mackerel', 'Whole Squid'] 
+  },
+  { 
+    id: 'vn', 
+    country: 'VIETNAM', 
+    // Placed exactly east of Thailand on the coast
+    top: '52%', left: '76%', 
+    products: ['Vannamei Shrimp'] 
   },
   { 
     id: 'cn', 
     country: 'CHINA', 
-    top: '42%', left: '76%', 
-    textTop: '35%', textLeft: '76%', textAlign: 'left',
+    // Centered cleanly over the Chinese mainland
+    top: '40%', left: '75%', 
+    products: ['Fish', 'Vannamei Shrimp'] 
   },
   { 
     id: 'jp', 
     country: 'JAPAN', 
-    top: '38%', left: '85%', 
-    textTop: '30%', textLeft: '88%', textAlign: 'left',
+    // Snapped over the Japanese islands
+    top: '36%', left: '85%', 
+    products: ['Shrimp', 'Squid & Cuttlefish Fillets'] 
   },
 ];
 
@@ -62,6 +77,7 @@ const topRowLogos = [haccp, ssop, gmp, india, eu];
 const bottomRowLogos = [aeo, fssai, brc, fda];
 
 const GlobalPresencePage = () => {
+  const [hoveredLocation, setHoveredLocation] = useState<string | null>(null);
 
   // Reusable component for Corinthia/Seasons headings
   const MixedHeading = ({ firstLetter, restOfText, className, style }: { firstLetter: React.ReactNode, restOfText: React.ReactNode, className?: string, style?: React.CSSProperties }) => (
@@ -104,14 +120,6 @@ const GlobalPresencePage = () => {
       opacity: 1, 
       scale: 1, 
       transition: { type: 'spring', stiffness: 300, damping: 20 } 
-    }
-  };
-
-  const tagsReveal: Variants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1, 
-      transition: { duration: 1, delay: 1.6, ease: 'easeInOut' } 
     }
   };
 
@@ -192,23 +200,74 @@ const GlobalPresencePage = () => {
           <motion.img 
             initial={{ opacity: 0 }} whileInView={{ opacity: 0.3 }} viewport={{ once: true }} transition={{ duration: 1.5 }}
             src={mapImg} alt="Global Export Map" 
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain pointer-events-none"
           />
 
-          <motion.div variants={fishContainerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute inset-0 z-20 pointer-events-none">
+          {/* INTERACTIVE FISH LAYER */}
+          <motion.div variants={fishContainerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute inset-0 z-20">
             {exportLocations.map((loc) => (
-              <motion.div key={`fish-${loc.id}`} variants={fishPop} className="absolute w-[3cqw] h-[3cqw] max-w-[32px] max-h-[32px] min-w-[12px] min-h-[12px]" style={{ top: loc.top, left: loc.left, transform: 'translate(-50%, -50%)' }}>
-                <img src={fishIcon} alt="Pin" className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(199,210,217,0.5)]" />
-              </motion.div>
-            ))}
-          </motion.div>
+              
+              // STABLE HOVER WRAPPER: Handles Z-index and Hover state
+              <div 
+                key={`fish-wrapper-${loc.id}`} 
+                className={`absolute flex items-center justify-center cursor-pointer transition-all ${
+                  hoveredLocation === loc.id ? 'z-[60]' : 'z-30'
+                }`}
+                style={{ top: loc.top, left: loc.left, width: '48px', height: '48px', transform: 'translate(-50%, -50%)' }}
+                onMouseEnter={() => setHoveredLocation(loc.id)}
+                onMouseLeave={() => setHoveredLocation(null)}
+              >
+                
+                {/* === THE REGIONAL LIGHT-UP EFFECT === */}
+                <div 
+                  className={`absolute inset-0 rounded-full transition-all duration-700 ease-out pointer-events-none
+                    ${hoveredLocation === loc.id 
+                      ? 'bg-[#6F90D3] blur-[25px] opacity-60 scale-[4.5]' 
+                      : 'bg-transparent blur-0 opacity-0 scale-100'}`}
+                />
 
-          <motion.div variants={tagsReveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute inset-0 z-10 pointer-events-none">
-            {exportLocations.map((loc) => (
-              <div key={`tag-${loc.id}`} className="absolute flex flex-col" style={{ top: loc.textTop, left: loc.textLeft, alignItems: loc.textAlign === 'right' ? 'flex-end' : loc.textAlign === 'center' ? 'center' : 'flex-start', textAlign: loc.textAlign as any }}>
-                <h4 className="font-seasons uppercase text-[#C7D2D9] leading-tight" style={{ fontSize: 'clamp(0.6rem, 1.2cqw, 24px)' }}>
-                  {loc.country}
-                </h4>
+                {/* DYNAMIC BUBBLE TOOLTIP */}
+                <AnimatePresence>
+                  {hoveredLocation === loc.id && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 z-50 flex flex-col items-center pointer-events-none"
+                    >
+                      <div className="bg-[#D9D9D9] rounded-[18px] py-3 px-6 shadow-[0_10px_30px_rgba(0,19,33,0.5)] flex flex-col items-center min-w-max border border-white/20">
+                        <h4 className="font-seasons uppercase text-[#001321] leading-tight text-lg md:text-xl mb-1.5">
+                          {loc.country}
+                        </h4>
+                        <div className="flex flex-col items-center gap-0.5">
+                          {loc.products.map((product, idx) => (
+                            <span key={idx} className="font-poppins font-light text-[#001321] text-xs md:text-sm leading-tight text-center">
+                              {product}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[10px] border-t-[#D9D9D9]"></div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Fish Icon & Neon Glow */}
+                <motion.div
+                  variants={fishPop}
+                  animate={{
+                    scale: hoveredLocation === loc.id ? 1.25 : 1,
+                    filter: hoveredLocation === loc.id 
+                      ? 'drop-shadow(0px 0px 10px #6F90D3) drop-shadow(0px 0px 5px #6F90D3) drop-shadow(0px 0px 2px #6F90D3)' 
+                      : 'drop-shadow(0px 0px 8px rgba(199,210,217,0.3))'
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className="relative w-[3cqw] h-[3cqw] max-w-[32px] max-h-[32px] min-w-[16px] min-h-[16px] z-40"
+                >
+                  <img src={fishIcon} alt="Pin" className="w-full h-full object-contain pointer-events-none" />
+                </motion.div>
+
               </div>
             ))}
           </motion.div>
