@@ -10,22 +10,22 @@ import story2 from '../assets/images/our-story/story2.png';
 import story1 from '../assets/images/our-story/story1.png';
 import bubblesImg from '../assets/bubbles.png'; 
 
-// --- Timeline Data Mapping ---
-// The year is kept strictly to 4 digits so the "digit rolling" works mathematically perfectly.
+// --- Timeline Data Mapping (13 Entries, 2 Images Per Phase) ---
+// Note: I alternated the imported images as placeholders. Replace with your actual phase assets!
 const timelineData = [
-  { year: '1970', label: '1970', text: 'Founded in Mangalore, India.', image: story1 },
-  { year: '1970', label: '1970', text: 'Commenced exclusive shrimp processing for the Japanese market in partnership with Taiyo Fishery Company, Limited.', image: story2 },
-  { year: '1990', label: '1990', text: 'Concluded the two-decade exclusive shrimp processing program for the Japanese market.', image: story1 },
-  { year: '1995', label: '1995', text: 'Exclusive processing of sashimi-grade squid fillets and cuttlefish fillets for the Japanese market through Hero Corporation, Limited.', image: story2 },
-  { year: '1996', label: '1996', text: 'Strategic expansion into fish processing for the Chinese market through an exclusive arrangement with China International Fisheries (Hong Kong) Limited.', image: story1 },
-  { year: '1997', label: '1997', text: 'Exclusive export program for green mussels to South Africa.', image: story2 },
-  { year: '1998', label: '1998', text: 'Exclusive supply of headless Black Tiger shrimp to Japan in partnership with Nissho Iwai Corporation.', image: story1 },
-  { year: '1999', label: '1999', text: 'Development and supply of a Yacht brand premium squid program for the United States through a long-standing exclusive private partnership.', image: story2 },
-  { year: '2000', label: '2000', text: 'Exclusive supply of head-on Black Tiger shrimp to France, in collaboration with CRUSTIMEX.', image: story1 },
-  { year: '2003', label: '2003', text: 'Indian mackerel processing for Thailand in collaboration with Itochu Corporation Thailand.', image: story2 },
-  { year: '2010', label: '2010', text: 'Supply of whole squid to selected long-term partners in Thailand.', image: story1 },
-  { year: '2011', label: '2011', text: 'Introduction of Vannamei shrimp processing for selected partners in China.', image: story2 },
-  { year: '2020', label: '2020', text: 'Expansion of Vannamei shrimp supply to selected partners in Vietnam.', image: story1 },
+  { year: '1970', label: '1970', text: 'Founded in Mangalore, India.', imageLeft: story2, imageRight: story1 },
+  { year: '1970', label: '1970', text: 'Commenced exclusive shrimp processing for the Japanese market in partnership with Taiyo Fishery Company, Limited.', imageLeft: legacy1, imageRight: legacy2 },
+  { year: '1990', label: '1990', text: 'Concluded the two-decade exclusive shrimp processing program for the Japanese market.', imageLeft: story1, imageRight: story2 },
+  { year: '1995', label: '1995', text: 'Exclusive processing of sashimi-grade squid fillets and cuttlefish fillets for the Japanese market through Hero Corporation, Limited.', imageLeft: legacy2, imageRight: legacy1 },
+  { year: '1996', label: '1996', text: 'Strategic expansion into fish processing for the Chinese market through an exclusive arrangement with China International Fisheries (Hong Kong) Limited.', imageLeft: story2, imageRight: story1 },
+  { year: '1997', label: '1997', text: 'Exclusive export program for green mussels to South Africa.', imageLeft: legacy1, imageRight: legacy2 },
+  { year: '1998', label: '1998', text: 'Exclusive supply of headless Black Tiger shrimp to Japan in partnership with Nissho Iwai Corporation.', imageLeft: story1, imageRight: story2 },
+  { year: '1999', label: '1999', text: 'Development and supply of a Yacht brand premium squid program for the United States through a long-standing exclusive private partnership.', imageLeft: legacy2, imageRight: legacy1 },
+  { year: '2000', label: '2000', text: 'Exclusive supply of head-on Black Tiger shrimp to France, in collaboration with CRUSTIMEX.', imageLeft: story2, imageRight: story1 },
+  { year: '2003', label: '2003', text: 'Indian mackerel processing for Thailand in collaboration with Itochu Corporation Thailand.', imageLeft: legacy1, imageRight: legacy2 },
+  { year: '2010', label: '2010', text: 'Supply of whole squid to selected long-term partners in Thailand.', imageLeft: story1, imageRight: story2 },
+  { year: '2011', label: '2011', text: 'Introduction of Vannamei shrimp processing for selected partners in China.', imageLeft: legacy2, imageRight: legacy1 },
+  { year: '2020', label: '2020', text: 'Expansion of Vannamei shrimp supply to selected partners in Vietnam.', imageLeft: story2, imageRight: story1 },
 ];
 
 const OurStoryPage = () => {
@@ -39,7 +39,6 @@ const OurStoryPage = () => {
   });
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // Calculates which slide should be active based on how far down the track we are
     const newIndex = Math.min(
       Math.floor(latest * timelineData.length), 
       timelineData.length - 1
@@ -49,11 +48,11 @@ const OurStoryPage = () => {
     }
   });
 
-  // Shifts the bottom horizontal years list to the left as we progress
+  // Capped scroll distance so it stops nicely at 2020 without blank space
   const horizontalScrollRaw = useTransform(
     scrollYProgress, 
     [0, 1], 
-    ["0%", `-${(timelineData.length - 7) * 10}%`] 
+    ["0%", "-45%"] 
   );
 
   // --- Animation Variants ---
@@ -212,64 +211,78 @@ const OurStoryPage = () => {
             </span>
           </h2>
 
-          {/* === THE ROLLING WHEEL YEAR (Split Digits) === */}
-          <div className="absolute top-[20%] w-full flex justify-center items-center h-[280px] overflow-hidden pointer-events-none z-0">
-            {/* Opacity significantly increased so it reads like a distinct watermark */}
-            <div className="flex font-seasons font-light text-[#C7D2D9]/30 leading-none select-none" style={{ fontSize: 'clamp(6rem, 28vw, 540px)' }}>
-              
-              {/* Splitting the year '1970' into ['1', '9', '7', '0'] */}
+          {/* === THE ROLLING WHEEL YEAR === */}
+          <div className="absolute top-[28%] w-full flex justify-center items-center pointer-events-none z-0">
+            <div className="flex font-seasons font-light text-[#C7D2D9] leading-none select-none" style={{ fontSize: 'clamp(6rem, 24vw, 420px)' }}>
               {timelineData[activeIndex].year.split('').map((digit, idx) => (
-                <span key={idx} className="relative inline-flex justify-center overflow-hidden h-[1.1em] w-[0.65em]">
+                <span key={idx} className="relative inline-flex justify-center items-center overflow-hidden h-[1.25em] w-[0.6em]">
                   <AnimatePresence mode="popLayout">
-                    {/* The Trick: By mapping the key to the EXACT digit, React only animates the numbers that actually change! */}
                     <motion.span
                       key={`${idx}-${digit}`}
                       initial={{ y: "100%", opacity: 0 }}
                       animate={{ y: "0%", opacity: 1 }}
                       exit={{ y: "-100%", opacity: 0 }}
                       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                      className="absolute top-0"
+                      className="absolute"
                     >
                       {digit}
                     </motion.span>
                   </AnimatePresence>
                 </span>
               ))}
-
             </div>
           </div>
 
-          {/* CHOREOGRAPHED IMAGE SWAP */}
+          {/* === CONTINUOUS IMAGE FLIGHT WITH MID-AIR CROSSFADE === */}
           <div className="absolute inset-0 w-full h-full pointer-events-none z-10">
-            <AnimatePresence mode="popLayout">
+            {timelineData.map((data, index) => {
+              const isActive = index === activeIndex;       // The Current Slide
+              const isPrev = index === activeIndex - 1;     // The Previous Slide
               
-              {/* IMAGE 1 (The Left Position) - Represents the PREVIOUS slide's image */}
-              {activeIndex > 0 && (
-                <motion.div
-                  key={`left-img-${activeIndex - 1}`}
-                  initial={{ x: '100vw', rotate: -7.38 }} 
-                  animate={{ x: 0, rotate: 13.7 }} 
-                  exit={{ x: '-50vw', opacity: 0, rotate: 20 }} 
-                  transition={{ duration: 0.8, ease: "easeInOut" }}
-                  className="absolute left-[12.7%] top-[42.59%] w-[17.58%] h-[18.9%] shadow-2xl overflow-hidden"
-                >
-                  <img src={timelineData[activeIndex - 1].image} alt="History" className="w-full h-full object-cover scale-110" />
-                </motion.div>
-              )}
+              return (
+                <div key={`timeline-slide-${index}`}>
+                  
+                  {/* THE LEFT IMAGE */}
+                  {/* Fades IN while flying Right -> Left. Fades OUT when flying Left -> Offscreen */}
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      left: isActive ? '12.7%' : isPrev ? '-30%' : '69.47%',
+                      top: isActive ? '42.59%' : isPrev ? '42.59%' : '17.31%',
+                      width: isActive ? '17.58%' : isPrev ? '17.58%' : '23.07%',
+                      height: isActive ? '18.9%' : isPrev ? '18.9%' : '25.46%',
+                      rotate: isActive ? 13.7 : isPrev ? 25 : -7.38,
+                      opacity: isActive ? 1 : 0,
+                    }}
+                    transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
+                    className="absolute shadow-2xl overflow-hidden"
+                    style={{ zIndex: isActive ? 20 : 10 }}
+                  >
+                    <img src={data.imageLeft} alt="History Phase Left" className="w-full h-full object-cover scale-110" />
+                  </motion.div>
 
-              {/* IMAGE 2 (The Right Position) - Represents the CURRENT slide's image */}
-              <motion.div
-                key={`right-img-${activeIndex}`}
-                initial={{ x: '50vw', opacity: 0, rotate: 0 }} 
-                animate={{ x: 0, opacity: 1, rotate: -7.38 }} 
-                exit={{ opacity: 0 }} 
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                className="absolute left-[69.47%] top-[17.31%] w-[23.07%] h-[25.46%] shadow-2xl overflow-hidden"
-              >
-                <img src={timelineData[activeIndex].image} alt="History" className="w-full h-full object-cover scale-110" />
-              </motion.div>
-
-            </AnimatePresence>
+                  {/* THE RIGHT IMAGE */}
+                  {/* Fades IN while entering from Far Right. Fades OUT while flying Right -> Left */}
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      left: isActive ? '69.47%' : isPrev ? '12.7%' : '100%',
+                      top: isActive ? '17.31%' : isPrev ? '42.59%' : '17.31%',
+                      width: isActive ? '23.07%' : isPrev ? '17.58%' : '23.07%',
+                      height: isActive ? '25.46%' : isPrev ? '18.9%' : '25.46%',
+                      rotate: isActive ? -7.38 : isPrev ? 13.7 : 0,
+                      opacity: isActive ? 1 : 0,
+                    }}
+                    transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
+                    className="absolute shadow-2xl overflow-hidden"
+                    style={{ zIndex: isPrev ? 25 : 15 }}
+                  >
+                    <img src={data.imageRight} alt="History Phase Right" className="w-full h-full object-cover scale-110" />
+                  </motion.div>
+                  
+                </div>
+              );
+            })}
           </div>
 
           {/* Text Description */}
@@ -290,7 +303,7 @@ const OurStoryPage = () => {
           </div>
 
           {/* Interactive Timeline Progress Bar */}
-          <div className="absolute top-[88%] w-full h-[15%] z-20">
+          <div className="absolute top-[82%] w-full h-[15%] z-20">
             <div className="absolute top-0 left-0 w-full h-[2px] bg-[#A2ADB4]/20"></div>
             
             <motion.div 
@@ -300,7 +313,7 @@ const OurStoryPage = () => {
 
             <div className="absolute top-[2vw] left-[3.125%] w-[93.75%] overflow-hidden">
               <motion.div 
-                className="flex items-center gap-[4vw] font-seasons uppercase whitespace-nowrap pt-2"
+                className="flex items-center gap-[4vw] font-seasons uppercase whitespace-nowrap pt-2 pr-[5vw]"
                 style={{ fontSize: 'clamp(1rem, 3.33vw, 64px)', x: horizontalScrollRaw }}
               >
                 {timelineData.map((item, index) => (
