@@ -1,4 +1,6 @@
-import { motion, type Variants } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent, type Variants } from 'framer-motion';
+import Navbar from '../components/layout/Navbar';
 
 // --- Asset Imports ---
 import heroImg from '../assets/images/our-story/hero.png';
@@ -6,12 +8,55 @@ import legacy2 from '../assets/images/our-story/legacy2.png';
 import legacy1 from '../assets/images/our-story/legacy1.png';
 import story2 from '../assets/images/our-story/story2.png';
 import story1 from '../assets/images/our-story/story1.png';
-// New bubbles import based on your specific path
 import bubblesImg from '../assets/bubbles.png'; 
 
-const OurStorySection = () => {
-  
-  // --- Animation Timelines ---
+// --- Timeline Data Mapping ---
+// The year is kept strictly to 4 digits so the "digit rolling" works mathematically perfectly.
+const timelineData = [
+  { year: '1970', label: '1970', text: 'Founded in Mangalore, India.', image: story1 },
+  { year: '1970', label: '1970', text: 'Commenced exclusive shrimp processing for the Japanese market in partnership with Taiyo Fishery Company, Limited.', image: story2 },
+  { year: '1990', label: '1990', text: 'Concluded the two-decade exclusive shrimp processing program for the Japanese market.', image: story1 },
+  { year: '1995', label: '1995', text: 'Exclusive processing of sashimi-grade squid fillets and cuttlefish fillets for the Japanese market through Hero Corporation, Limited.', image: story2 },
+  { year: '1996', label: '1996', text: 'Strategic expansion into fish processing for the Chinese market through an exclusive arrangement with China International Fisheries (Hong Kong) Limited.', image: story1 },
+  { year: '1997', label: '1997', text: 'Exclusive export program for green mussels to South Africa.', image: story2 },
+  { year: '1998', label: '1998', text: 'Exclusive supply of headless Black Tiger shrimp to Japan in partnership with Nissho Iwai Corporation.', image: story1 },
+  { year: '1999', label: '1999', text: 'Development and supply of a Yacht brand premium squid program for the United States through a long-standing exclusive private partnership.', image: story2 },
+  { year: '2000', label: '2000', text: 'Exclusive supply of head-on Black Tiger shrimp to France, in collaboration with CRUSTIMEX.', image: story1 },
+  { year: '2003', label: '2003', text: 'Indian mackerel processing for Thailand in collaboration with Itochu Corporation Thailand.', image: story2 },
+  { year: '2010', label: '2010', text: 'Supply of whole squid to selected long-term partners in Thailand.', image: story1 },
+  { year: '2011', label: '2011', text: 'Introduction of Vannamei shrimp processing for selected partners in China.', image: story2 },
+  { year: '2020', label: '2020', text: 'Expansion of Vannamei shrimp supply to selected partners in Vietnam.', image: story1 },
+];
+
+const OurStoryPage = () => {
+  // --- Scroll Tracking State ---
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    // Calculates which slide should be active based on how far down the track we are
+    const newIndex = Math.min(
+      Math.floor(latest * timelineData.length), 
+      timelineData.length - 1
+    );
+    if (newIndex !== activeIndex) {
+      setActiveIndex(newIndex);
+    }
+  });
+
+  // Shifts the bottom horizontal years list to the left as we progress
+  const horizontalScrollRaw = useTransform(
+    scrollYProgress, 
+    [0, 1], 
+    ["0%", `-${(timelineData.length - 7) * 10}%`] 
+  );
+
+  // --- Animation Variants ---
   const fadeUp: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } }
@@ -27,26 +72,14 @@ const OurStorySection = () => {
     visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.2 } }
   };
 
-  // Custom variants to preserve rotation during the fade-up animation!
-  const fadeUpRotateRight: Variants = {
-    hidden: { opacity: 0, y: 30, rotate: -7.38 },
-    visible: { opacity: 1, y: 0, rotate: -7.38, transition: { duration: 0.8, ease: 'easeOut' } }
-  };
-
-  const fadeUpRotateLeft: Variants = {
-    hidden: { opacity: 0, y: 30, rotate: 13.7 },
-    visible: { opacity: 1, y: 0, rotate: 13.7, transition: { duration: 0.8, ease: 'easeOut' } }
-  };
-
   return (
-    <section className="w-full bg-[#001321] text-[#C7D2D9] overflow-hidden flex flex-col">
-      
-      {/* --- 1. HERO & INTRO --- */}
-      {/* Removed max-w-[1920px] so this stretches infinitely on 2k+ displays */}
-      <div 
-        className="relative w-full aspect-video min-h-[600px] md:min-h-0" 
-        style={{ containerType: 'inline-size' }}
-      >
+    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-0">
+      <Navbar />
+
+      {/* ═══════════════════════════════════════════════════
+          SECTION 1 — HERO & INTRO
+      ═══════════════════════════════════════════════════ */}
+      <div className="relative w-full aspect-video min-h-[600px] md:min-h-0" style={{ containerType: 'inline-size' }}>
         <motion.img 
           variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true }}
           src={heroImg} alt="Sterling Foods History" 
@@ -71,19 +104,15 @@ const OurStorySection = () => {
         </motion.p>
       </div>
 
-      {/* --- 2. MEASURED DECISIONS --- */}
-      <div 
-        className="relative w-full aspect-[1.219] max-w-[1920px] mx-auto min-h-[800px] md:min-h-0 mb-16" 
-        style={{ containerType: 'inline-size' }}
-      >
-      {/* Multiline Header with Corinthia 'A' */}
+      {/* ═══════════════════════════════════════════════════
+          SECTION 2 — MEASURED DECISIONS
+      ═══════════════════════════════════════════════════ */}
+      <div className="relative w-full aspect-[1.219] max-w-[1920px] mx-auto min-h-[800px] md:min-h-0 mb-16" style={{ containerType: 'inline-size' }}>
         <motion.h2 
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} 
           className="absolute top-[2%] w-full text-center z-30 text-[#C7D2D9]" 
-          // 1. Scaled down the font size math (was 2.5rem, 5cqw, 96px)
           style={{ fontSize: 'clamp(2rem, 4cqw, 80px)' }}
         >
-          {/* 2. Tightened the line height (was leading-[1.1], now leading-[0.95]) */}
           <span className="font-seasons uppercase leading-[0.45]">
             <span style={{ fontFamily: "'Corinthia', cursive", fontSize: '1.5em', textTransform: 'none', display: 'inline-block', transform: 'translateY(0em)', marginRight: '10px' }}>A</span> 
             LEGACY BUILT ON<br />
@@ -91,28 +120,24 @@ const OurStorySection = () => {
           </span>
         </motion.h2>
 
-        {/* Bubbles Image */}
         <motion.img 
           variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}
           src={bubblesImg} alt="Decorative bubbles" 
           className="absolute left-[71.13%] top-[5.42%] w-[6.16%] h-auto z-10" 
         />
 
-        {/* Center Main Image (z-20 so it sits UNDER the blue box) */}
         <motion.img 
           variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} 
           src={legacy1} alt="Fishing techniques" 
           className="absolute left-[33.8%] top-[13.96%] w-[31.4%] h-[46.85%] object-cover shadow-2xl z-20" 
         />
 
-        {/* Left Floating Image */}
         <motion.img 
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} 
           src={legacy2} alt="Processing lines" 
           className="absolute left-[21.3%] top-[31.68%] w-[14.68%] h-[19.74%] object-cover shadow-2xl z-30" 
         />
 
-        {/* --- THE BLUE BOX (z-30) & TEXT (z-40) --- */}
         <motion.div 
           variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.4 }} 
           className="absolute left-[61.56%] top-[26.47%] w-[21.14%] h-[24.95%] bg-[#C7D2D9] z-30 shadow-2xl" 
@@ -133,9 +158,7 @@ const OurStorySection = () => {
         >
           Sterling Foods was established during the formative years of India’s seafood export industry.
         </motion.p>
-        {/* -------------------------------------- */}
 
-        {/* Bottom Headline */}
         <motion.h3 
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} 
           className="absolute left-[17.34%] top-[63.36%] w-[65.36%] text-center font-seasons leading-[1.31] z-20" 
@@ -144,7 +167,6 @@ const OurStorySection = () => {
           From the beginning, the objective was clear: build a processing operation capable of delivering consistent export quality under demanding international standards
         </motion.h3>
 
-        {/* Bottom Text Columns */}
         <motion.div 
           variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} 
           className="absolute left-[17.34%] top-[72.38%] w-[65.98%] flex justify-between z-20"
@@ -167,84 +189,141 @@ const OurStorySection = () => {
             </motion.p>
           </div>
         </motion.div>
-
       </div>
 
-      {/* --- 3. TIMELINE 1970 --- */}
+      {/* ═══════════════════════════════════════════════════
+          SECTION 3 — SCROLL-LOCKED TIMELINE
+      ═══════════════════════════════════════════════════ */}
       <div 
-        className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[600px] md:min-h-0" 
-        style={{ containerType: 'inline-size' }}
+        className="relative w-full" 
+        style={{ height: `${timelineData.length * 100}vh` }} 
+        ref={containerRef}
       >
-        {/* Header with Corinthia 'A' */}
-        <motion.h2 
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} 
-          className="absolute top-[5.55%] w-full text-center z-30 text-[#A2ADB4]" 
-          style={{ fontSize: 'clamp(2.5rem, 5cqw, 96px)' }}
-        >
-          <span className="font-seasons uppercase leading-[1.1]">
-            <span style={{ fontFamily: "'Corinthia', cursive", fontSize: '1.5em', textTransform: 'none', display: 'inline-block', transform: 'translateY(0.15em)', marginRight: '10px' }}>A</span> 
-            LEGACY BUILT IN PHASES
-          </span>
-        </motion.h2>
-
-        <motion.div 
-          variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} 
-          className="absolute top-[17.5%] w-full text-center font-seasons font-light leading-none pointer-events-none select-none z-0" 
-          style={{ fontSize: 'clamp(6rem, 28.1cqw, 540px)' }}
-        >
-          1970
-        </motion.div>
-
-        {/* Right Rotated Image (Using custom rotation variant) */}
-        <motion.div 
-          variants={fadeUpRotateRight} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
-          className="absolute left-[69.47%] top-[17.31%] w-[23.07%] h-[25.46%] shadow-2xl overflow-hidden z-10" 
-        >
-          <img src={story1} alt="Historical fleet" className="w-full h-full object-cover scale-110" />
-        </motion.div>
-
-        {/* Left Rotated Image (Using custom rotation variant) */}
-        <motion.div 
-          variants={fadeUpRotateLeft} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
-          className="absolute left-[12.7%] top-[42.59%] w-[17.58%] h-[18.9%] shadow-2xl overflow-hidden z-10" 
-        >
-          <img src={story2} alt="Early processing" className="w-full h-full object-cover scale-110" />
-        </motion.div>
-
-        {/* Pushed up to Top-[77%] so it sits perfectly above the timeline track! */}
-        <motion.div 
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} 
-          className="absolute top-[77%] w-full text-center font-inter font-light text-[#A2ADB4] tracking-[-0.03em] z-10" 
-          style={{ fontSize: 'clamp(0.8rem, 1.25cqw, 24px)' }}
-        >
-          Founded in Mangalore, India
-        </motion.div>
-
-        {/* Interactive Timeline Slider Track */}
-        <motion.div 
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.8 }} 
-          className="absolute top-[84.62%] w-full h-[15%] z-20"
-        >
-          <div className="absolute top-0 left-0 w-full h-[2px] bg-[#A2ADB4]/40"></div>
-          <motion.div variants={fadeIn} className="absolute top-0 left-0 w-[15.2%] h-[2px] bg-[#C7D2D9]"></motion.div>
-
-          <div 
-            className="absolute top-[3cqw] left-[3.125%] w-[93.75%] flex justify-between items-center font-seasons uppercase" 
-            style={{ fontSize: 'clamp(1rem, 3.33cqw, 64px)' }}
+        <div className="sticky top-0 w-full h-screen max-w-[1920px] mx-auto overflow-hidden bg-[#001321] flex flex-col justify-center">
+          
+          {/* Header */}
+          <h2 
+            className="absolute top-[8%] w-full text-center z-30 text-[#A2ADB4]" 
+            style={{ fontSize: 'clamp(2.5rem, 5vw, 96px)' }}
           >
-            <motion.span variants={fadeUp} className="text-[#C7D2D9]">1970</motion.span>
-            <motion.span variants={fadeUp} className="text-[#A2ADB4]/60">1990</motion.span>
-            <motion.span variants={fadeUp} className="text-[#A2ADB4]/60">1995</motion.span>
-            <motion.span variants={fadeUp} className="text-[#A2ADB4]/60">1996</motion.span>
-            <motion.span variants={fadeUp} className="text-[#A2ADB4]/60">1997</motion.span>
-            <motion.span variants={fadeUp} className="text-[#A2ADB4]/60">1998</motion.span>
-            <motion.span variants={fadeUp} className="text-[#A2ADB4]/60">1999</motion.span>
+            <span className="font-seasons uppercase leading-[1.1]">
+              <span style={{ fontFamily: "'Corinthia', cursive", fontSize: '1.5em', textTransform: 'none', display: 'inline-block', transform: 'translateY(0.15em)', marginRight: '10px' }}>A</span> 
+              LEGACY BUILT IN PHASES
+            </span>
+          </h2>
+
+          {/* === THE ROLLING WHEEL YEAR (Split Digits) === */}
+          <div className="absolute top-[20%] w-full flex justify-center items-center h-[280px] overflow-hidden pointer-events-none z-0">
+            {/* Opacity significantly increased so it reads like a distinct watermark */}
+            <div className="flex font-seasons font-light text-[#C7D2D9]/30 leading-none select-none" style={{ fontSize: 'clamp(6rem, 28vw, 540px)' }}>
+              
+              {/* Splitting the year '1970' into ['1', '9', '7', '0'] */}
+              {timelineData[activeIndex].year.split('').map((digit, idx) => (
+                <span key={idx} className="relative inline-flex justify-center overflow-hidden h-[1.1em] w-[0.65em]">
+                  <AnimatePresence mode="popLayout">
+                    {/* The Trick: By mapping the key to the EXACT digit, React only animates the numbers that actually change! */}
+                    <motion.span
+                      key={`${idx}-${digit}`}
+                      initial={{ y: "100%", opacity: 0 }}
+                      animate={{ y: "0%", opacity: 1 }}
+                      exit={{ y: "-100%", opacity: 0 }}
+                      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                      className="absolute top-0"
+                    >
+                      {digit}
+                    </motion.span>
+                  </AnimatePresence>
+                </span>
+              ))}
+
+            </div>
           </div>
-        </motion.div>
+
+          {/* CHOREOGRAPHED IMAGE SWAP */}
+          <div className="absolute inset-0 w-full h-full pointer-events-none z-10">
+            <AnimatePresence mode="popLayout">
+              
+              {/* IMAGE 1 (The Left Position) - Represents the PREVIOUS slide's image */}
+              {activeIndex > 0 && (
+                <motion.div
+                  key={`left-img-${activeIndex - 1}`}
+                  initial={{ x: '100vw', rotate: -7.38 }} 
+                  animate={{ x: 0, rotate: 13.7 }} 
+                  exit={{ x: '-50vw', opacity: 0, rotate: 20 }} 
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  className="absolute left-[12.7%] top-[42.59%] w-[17.58%] h-[18.9%] shadow-2xl overflow-hidden"
+                >
+                  <img src={timelineData[activeIndex - 1].image} alt="History" className="w-full h-full object-cover scale-110" />
+                </motion.div>
+              )}
+
+              {/* IMAGE 2 (The Right Position) - Represents the CURRENT slide's image */}
+              <motion.div
+                key={`right-img-${activeIndex}`}
+                initial={{ x: '50vw', opacity: 0, rotate: 0 }} 
+                animate={{ x: 0, opacity: 1, rotate: -7.38 }} 
+                exit={{ opacity: 0 }} 
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                className="absolute left-[69.47%] top-[17.31%] w-[23.07%] h-[25.46%] shadow-2xl overflow-hidden"
+              >
+                <img src={timelineData[activeIndex].image} alt="History" className="w-full h-full object-cover scale-110" />
+              </motion.div>
+
+            </AnimatePresence>
+          </div>
+
+          {/* Text Description */}
+          <div className="absolute top-[75%] w-full h-[80px] flex justify-center items-center overflow-hidden z-20">
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={activeIndex}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+                className="text-center font-inter font-light text-[#A2ADB4] tracking-[-0.03em] max-w-[50%]" 
+                style={{ fontSize: 'clamp(0.8rem, 1.2vw, 24px)' }}
+              >
+                {timelineData[activeIndex].text}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Interactive Timeline Progress Bar */}
+          <div className="absolute top-[88%] w-full h-[15%] z-20">
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-[#A2ADB4]/20"></div>
+            
+            <motion.div 
+              style={{ scaleX: scrollYProgress, transformOrigin: 'left' }}
+              className="absolute top-0 left-0 w-full h-[2px] bg-[#C7D2D9]"
+            ></motion.div>
+
+            <div className="absolute top-[2vw] left-[3.125%] w-[93.75%] overflow-hidden">
+              <motion.div 
+                className="flex items-center gap-[4vw] font-seasons uppercase whitespace-nowrap pt-2"
+                style={{ fontSize: 'clamp(1rem, 3.33vw, 64px)', x: horizontalScrollRaw }}
+              >
+                {timelineData.map((item, index) => (
+                  <motion.span 
+                    key={index} 
+                    className="transition-colors duration-500 cursor-pointer"
+                    style={{ 
+                      color: activeIndex === index ? '#C7D2D9' : 'rgba(162, 173, 180, 0.4)',
+                      opacity: activeIndex === index ? 1 : 0.6 
+                    }}
+                  >
+                    {item.label}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-    </section>
+    </div>
   );
 };
 
-export default OurStorySection;
+export default OurStoryPage;
