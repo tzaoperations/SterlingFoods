@@ -303,7 +303,7 @@ const OurStoryPage = () => {
           </div>
 
           {/* Interactive Timeline Progress Bar */}
-          <div className="absolute top-[82%] w-full h-[15%] z-20">
+          <div className="absolute top-[85%] w-full h-[15%] z-20">
             <div className="absolute top-0 left-0 w-full h-[2px] bg-[#A2ADB4]/20"></div>
             
             <motion.div 
