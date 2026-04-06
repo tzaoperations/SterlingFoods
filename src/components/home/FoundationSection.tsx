@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, type Variants } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 // Asset Imports
 import heritage1 from '../../assets/images/home/heritage1.png'; // Sauce Pouring
@@ -275,10 +276,10 @@ const FoundationSection = () => {
                     {products[activeProduct].desc}
                   </p>
                   
-                  <button className="flex items-center gap-3 mt-8 text-[#C7D2D9] font-poppins capitalize tracking-wide transition-opacity hover:opacity-70" style={{ fontSize: 'clamp(0.75rem, 0.83cqw, 16px)' }}>
+                  <Link to={`/${activeProduct}`} className="flex items-center gap-3 mt-8 text-[#C7D2D9] font-poppins capitalize tracking-wide transition-opacity hover:opacity-70 w-max" style={{ fontSize: 'clamp(0.75rem, 0.83cqw, 16px)' }}>
                     <span className="w-1.5 h-1.5 bg-[#C7D2D9] rounded-full"></span>
                     {products[activeProduct].btnText}
-                  </button>
+                  </Link>
                 </motion.div>
               </AnimatePresence>
             </motion.div>
