@@ -1,11 +1,172 @@
-import { motion, type Variants } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent, type Variants } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
 
 // --- Asset Imports ---
 import heroImg from '../assets/images/processing/hero.png';
 import squidImg from '../assets/images/processing/squid.png';
+// Add your other images here:
+// import prepImg from '../assets/images/processing/prep.png';
+// import gradingImg from '../assets/images/processing/grading.png';
+
+// --- Carousel Data Mapping ---
+const processingSteps = [
+  {
+    stepNum: 'STEP 1/7',
+    titleFirst: 'R',
+    titleRest: <>AW MATERIAL RECEIVING <br/> & INSPECTION</>,
+    groups: [
+      {
+        heading: 'All incoming raw material is:',
+        items: [
+          'Received under controlled temperature conditions',
+          'Checked for freshness, colour, odour, and structural integrity',
+          'Segregated by species, size, and grade',
+          'Logged for full batch traceability'
+        ]
+      }
+    ],
+    footer: '*Non-compliant material does not enter production.',
+    image: squidImg // Replace with actual step 1 image
+  },
+  {
+    stepNum: 'STEP 2/7',
+    titleFirst: 'P',
+    titleRest: <>RIMARY PROCESSING <br/> & PREPARATION</>,
+    groups: [
+      {
+        heading: 'Product moves through structured washing, cleaning, and preparation sequences designed to:',
+        items: [
+          'Preserve natural freshness',
+          'Protect mantle integrity (squid)',
+          'Maintain colour and firmness (shrimp)',
+          'Minimise handling stress'
+        ]
+      }
+    ],
+    footer: '*Time between intake and freezing is tightly controlled.',
+    image: heroImg // Replace with actual step 2 image
+  },
+  {
+    stepNum: 'STEP 3/7',
+    titleFirst: 'G',
+    titleRest: <>RADING & SPECIFICATION <br/> CONTROL</>,
+    groups: [
+      {
+        heading: 'Each batch is graded and verified based on:',
+        items: [
+          'Count accuracy (shrimp)',
+          'Size and mantle integrity (squid)',
+          'A-grade / B-grade segregation (whole squid markets)',
+          'Cut uniformity (rings and tentacles)'
+        ]
+      }
+    ],
+    footer: '*Specifications are confirmed before freezing.',
+    image: squidImg // Replace with actual step 3 image
+  },
+  {
+    stepNum: 'STEP 4/7',
+    titleFirst: 'R',
+    titleRest: <>APID FREEZING <br/> SYSTEMS</>,
+    groups: [
+      {
+        heading: 'Freezing systems are engineered for rapid core temperature reduction to:',
+        items: [
+          'Lock structural firmness',
+          'Preserve natural colour',
+          'Reduce drip loss',
+          'Maintain texture stability',
+          'Protect net weight integrity'
+        ]
+      }
+    ],
+    footer: '*Freezing parameters are monitored and documented.',
+    image: heroImg // Replace with actual step 4 image
+  },
+  {
+    stepNum: 'STEP 5/7',
+    titleFirst: 'G',
+    titleRest: <>LAZING & FINAL <br/> INSPECTION</>,
+    groups: [
+      {
+        heading: 'Glaze application is controlled to ensure:',
+        items: [
+          'Surface moisture protection',
+          'Uniform coverage',
+          'Accurate declared net weight'
+        ]
+      },
+      {
+        heading: 'All finished product undergoes:',
+        items: [
+          'Metal detection',
+          'Visual quality verification',
+          'Weight confirmation',
+          'Batch documentation review'
+        ]
+      }
+    ],
+    footer: null,
+    image: squidImg // Replace with actual step 5 image
+  },
+  {
+    stepNum: 'STEP 6/7',
+    titleFirst: 'I',
+    titleRest: <>N-HOUSE LABORATORY <br/> & COMPLIANCE CONTROLS</>,
+    groups: [
+      {
+        heading: 'Quality assurance includes:',
+        items: [
+          'Antibiotic screening protocols',
+          'Microbiological testing',
+          'Residue and contaminant monitoring',
+          'Organoleptic evaluation',
+          'Routine batch-level verification'
+        ]
+      }
+    ],
+    footer: '*Laboratory systems operate in alignment with export market requirements across Asia, the United States, and Europe.',
+    image: heroImg // Replace with actual step 6 image
+  },
+  {
+    stepNum: 'STEP 7/7',
+    titleFirst: 'C',
+    titleRest: <>OLD STORAGE & <br/> DISPATCH INTEGRITY</>,
+    groups: [
+      {
+        heading: 'Finished goods are transferred to:',
+        items: [
+          'Temperature-monitored cold storage',
+          'Segregated pallet zones',
+          'FIFO-controlled dispatch systems'
+        ]
+      }
+    ],
+    footer: '*Cold chain integrity is maintained until loading.',
+    image: squidImg // Replace with actual step 7 image
+  }
+];
 
 const ProcessingPage = () => {
+  // --- Scroll Tracking State ---
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    const newIndex = Math.min(
+      Math.floor(latest * processingSteps.length), 
+      processingSteps.length - 1
+    );
+    if (newIndex !== activeIndex) {
+      setActiveIndex(newIndex);
+    }
+  });
 
   // Reusable component for Corinthia/Seasons headings (with baseline fix)
   const MixedHeading = ({ firstLetter, restOfText, className, style }: { firstLetter: React.ReactNode, restOfText: React.ReactNode, className?: string, style?: React.CSSProperties }) => (
@@ -27,55 +188,57 @@ const ProcessingPage = () => {
   );
 
   // --- Animation Variants ---
-  const fadeUp: Variants = {
+  const fadeUpHero: Variants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } }
+    visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: 'easeOut' } }
   };
 
-  const fadeIn: Variants = {
+  const fadeInHero: Variants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 1, ease: 'easeOut' } }
+    visible: { opacity: 1, transition: { duration: 1.5, ease: 'easeOut' } }
   };
 
-  const staggerContainer: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.2 } }
+  // --- Slowed Down Carousel Animations ---
+  const customEase = [0.22, 1, 0.36, 1];
+
+  // Text flows UPWARDS (fades in from bottom, fades out to top)
+  const textVariants = {
+    initial: { opacity: 0, y: 50 },
+    animate: { opacity: 1, y: 0, transition: { duration: 1.5, ease: customEase } },
+    exit: { opacity: 0, y: -50, transition: { duration: 1.2, ease: customEase } }
   };
 
-  // List data for Step 1
-  const inspectionSteps = [
-    { text: "Received under controlled temperature conditions", num: "01" },
-    { text: "Checked for freshness, colour, odour, and structural integrity", num: "02" },
-    { text: "Segregated by species, size, and grade", num: "03" },
-    { text: "Logged for full batch traceability", num: "04" }
-  ];
+  // Image flows DOWNWARDS (fades in from top, fades out to bottom)
+  const imageVariants = {
+    initial: { opacity: 0, y: -50 },
+    animate: { opacity: 1, y: 0, transition: { duration: 1.5, ease: customEase } },
+    exit: { opacity: 0, y: 50, transition: { duration: 1.2, ease: customEase } }
+  };
+
+  const activeStep = processingSteps[activeIndex];
 
   return (
-    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-32">
+    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-0">
       <Navbar />
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 1 — HERO (Mapped to 1920x1080)
+          SECTION 1 — HERO
       ═══════════════════════════════════════════════════ */}
-      <div className="relative w-full h-[60vh] min-h-[600px] flex flex-col items-center justify-center mb-16 md:mb-0">
+      <div className="relative w-full h-[60vh] min-h-[600px] flex flex-col items-center justify-center">
         
-        {/* Full Bleed Image Container */}
         <div className="absolute inset-0 w-full h-[53.24%] top-0">
           <motion.img
-            variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true }}
+            variants={fadeInHero} initial="hidden" whileInView="visible" viewport={{ once: true }}
             src={heroImg}
             alt="Chef plating seafood"
             className="w-full h-full object-cover shadow-2xl"
           />
-          {/* Gradient overlay matching Figma CSS: linear-gradient(0deg, rgba(0,0,0,0.2), rgba(0,0,0,0.2)) */}
           <div className="absolute inset-0 bg-black/20 pointer-events-none" />
         </div>
 
-        {/* Constrained Text Wrapper */}
         <div className="relative w-full h-full max-w-[1920px] mx-auto z-10" style={{ containerType: 'inline-size' }}>
-          
           <motion.h1 
-            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.8 }}
+            variants={fadeUpHero} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.8 }}
             className="absolute left-[16.6%] top-[61.2%] w-[66.7%] text-center font-seasons uppercase leading-[1.1]" 
             style={{ fontSize: 'clamp(2.5rem, 5cqw, 96px)' }}
           >
@@ -83,7 +246,7 @@ const ProcessingPage = () => {
           </motion.h1>
 
           <motion.p
-            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.8 }}
+            variants={fadeUpHero} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.8 }}
             className="absolute left-[21.9%] top-[92%] w-[56.1%] text-center font-poppins font-light text-[#C7D2D9] leading-[1.2]"
             style={{ fontSize: 'clamp(0.8rem, 1.25cqw, 24px)' }}
           >
@@ -93,75 +256,92 @@ const ProcessingPage = () => {
       </div>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 2 — RAW MATERIAL RECEIVING (Mapped to 1920x1080)
+          SECTION 2 — INTERACTIVE SCROLL CAROUSEL
       ═══════════════════════════════════════════════════ */}
-      <div className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[800px]" style={{ containerType: 'inline-size' }}>
-        
-        {/* Right Image (Rectangle 34624773) */}
-        <motion.img 
-          variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}
-          src={squidImg} 
-          alt="Raw Squid" 
-          className="absolute left-[52.55%] top-[8.33%] w-[42.96%] h-[83.7%] object-cover shadow-2xl" 
-        />
-
-        {/* Step Label */}
-        <motion.div 
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-          className="absolute left-[4.48%] top-[8.33%] font-poppins font-light text-[#A2ADB4] tracking-widest uppercase"
-          style={{ fontSize: 'clamp(0.7rem, 1.04cqw, 20px)' }}
-        >
-          STEP 1/8
-        </motion.div>
-
-        {/* Section Heading */}
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute left-[4.48%] top-[12.4%] w-[41.6%]">
-          <MixedHeading 
-            firstLetter="R" 
-            restOfText={<>AW MATERIAL RECEIVING <br/> & INSPECTION</>}
-            style={{ fontSize: 'clamp(1.3rem, 3.6cqw, 80px)' }}
-          />
-        </motion.div>
-
-        {/* List Subheading */}
-        <motion.div 
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
-          className="absolute left-[4.48%] top-[64.26%] font-seasons text-[#A2ADB4]"
-          style={{ fontSize: 'clamp(1.2rem, 1.66cqw, 32px)' }}
-        >
-          All incoming raw material is
-        </motion.div>
-
-        {/* List Container */}
-        <motion.div 
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
-          className="absolute left-[4.48%] top-[69.07%] w-[42.96%] flex flex-col"
-        >
-          {inspectionSteps.map((step, index) => (
+      {/* THE FIX: Increased height from 100vh per step to 150vh per step. 
+          This increases the "scroll runway", naturally slowing down how fast the user shifts between steps. */}
+      <div 
+        ref={containerRef} 
+        className="relative w-full" 
+        style={{ height: `${processingSteps.length * 120}vh` }}
+      >
+        {/* Sticky container locks the view to the screen while scrolling */}
+        <div className="sticky top-0 w-full h-screen max-w-[1920px] mx-auto overflow-hidden bg-[#001321] flex items-center" style={{ containerType: 'inline-size' }}>
+          
+          <AnimatePresence mode="popLayout">
+            
+            {/* === LEFT SIDE: TEXT BLOCK (Animates UPWARDS) === */}
             <motion.div 
-              key={index}
-              variants={fadeUp}
-              className="flex justify-between items-center border-b border-[#A2ADB4]/30 py-[1cqw]"
+              key={`text-${activeIndex}`}
+              variants={textVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="absolute left-[4.48%] w-[42%] flex flex-col justify-center gap-[2cqw]"
             >
-              <span className="font-poppins font-light text-[#A2ADB4] w-[90%]" style={{ fontSize: 'clamp(0.75rem, 1.04cqw, 20px)' }}>
-                {step.text}
-              </span>
-              <span className="font-poppins font-light text-[#A2ADB4]" style={{ fontSize: 'clamp(0.75rem, 1.04cqw, 20px)' }}>
-                {step.num}
-              </span>
+              {/* Step Label */}
+              <div className="font-poppins font-light text-[#A2ADB4] tracking-widest uppercase" style={{ fontSize: 'clamp(0.7rem, 1.04cqw, 20px)' }}>
+                {activeStep.stepNum}
+              </div>
+
+              {/* Title */}
+              <MixedHeading 
+                firstLetter={activeStep.titleFirst} 
+                restOfText={activeStep.titleRest}
+                style={{ fontSize: 'clamp(1.3rem, 3.6cqw, 80px)' }}
+              />
+
+              {/* Dynamic List Groups */}
+              <div className="flex flex-col gap-[3cqw] mt-[2cqw]">
+                {activeStep.groups.map((group, groupIdx) => (
+                  <div key={groupIdx} className="flex flex-col">
+                    <div className="font-seasons text-[#A2ADB4] mb-[1cqw]" style={{ fontSize: 'clamp(1.2rem, 1.66cqw, 32px)' }}>
+                      {group.heading}
+                    </div>
+                    
+                    <div className="flex flex-col">
+                      {group.items.map((item, itemIdx) => (
+                        <div key={itemIdx} className="flex justify-between items-center border-b border-[#A2ADB4]/30 py-[1cqw]">
+                          <span className="font-poppins font-light text-[#A2ADB4] w-[90%]" style={{ fontSize: 'clamp(0.75rem, 1.04cqw, 20px)' }}>
+                            {item}
+                          </span>
+                          <span className="font-poppins font-light text-[#A2ADB4]" style={{ fontSize: 'clamp(0.75rem, 1.04cqw, 20px)' }}>
+                            {(itemIdx + 1).toString().padStart(2, '0')}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Optional Footer Disclaimer */}
+              {activeStep.footer && (
+                <div className="font-poppins font-light text-[#A2ADB4] mt-[1cqw]" style={{ fontSize: 'clamp(0.6rem, 0.83cqw, 16px)' }}>
+                  {activeStep.footer}
+                </div>
+              )}
             </motion.div>
-          ))}
-        </motion.div>
 
-        {/* Disclaimer Footer */}
-        <motion.div 
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.8 }}
-          className="absolute left-[4.48%] top-[100.44%] font-poppins font-light text-[#A2ADB4]"
-          style={{ fontSize: 'clamp(0.6rem, 0.83cqw, 16px)' }}
-        >
-          *Non-compliant material does not enter production
-        </motion.div>
+            {/* === RIGHT SIDE: IMAGE BLOCK (Animates DOWNWARDS) === */}
+            <motion.div 
+              key={`image-${activeIndex}`}
+              variants={imageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="absolute left-[52.55%] w-[42.96%] h-[83.7%] flex items-center justify-center overflow-hidden shadow-2xl"
+            >
+              <img 
+                src={activeStep.image} 
+                alt={activeStep.titleFirst} 
+                className="w-full h-full object-cover" 
+              />
+            </motion.div>
 
+          </AnimatePresence>
+
+        </div>
       </div>
 
     </div>
