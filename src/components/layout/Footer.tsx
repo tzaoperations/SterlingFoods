@@ -16,90 +16,87 @@ const Footer = () => {
   };
 
   return (
-    // The background color closely matches the light grayish-blue in the design
-    <footer className="relative w-full overflow-hidden bg-[#C7D2D9] text-[#001321] pt-16 md:pt-20 flex flex-col justify-between">
+    <footer className="relative w-full bg-[#C7D2D9] text-[#001321] overflow-hidden flex justify-center">
       
+      {/* THE MASTER CONTAINER:
+          Tightened padding (pt-10, px-10) pushes the logo up and to the left corner.
+      */}
       <motion.div 
-        className="mx-auto w-full max-w-[1920px] px-6 md:px-12 flex flex-col z-10"
+        className="w-full max-w-[1920px] flex flex-col relative z-10 pt-10 pb-8 px-6 md:pt-10 md:pb-10 md:px-10"
+        style={{ containerType: 'inline-size' }}
         variants={fadeIn}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
       >
         
-        {/* --- Top Section: Logo & Navigation --- */}
-        <div className="flex flex-col md:flex-row justify-between items-start mb-16 md:mb-24">
-          
-          {/* Top Left: Logo */}
-          <div className="mb-12 md:mb-0">
-            <img 
-              src={logoIcon} 
-              alt="Sterling Foods Icon" 
-              className="h-20 w-auto object-contain" 
-            />
-          </div>
+        {/* --- Top Row: Logo & Navigation --- */}
+        <div className="flex flex-col md:flex-row justify-between items-start w-full">
+           
+           {/* Logo - Pushed securely to top left */}
+           <div className="mb-12 md:mb-0">
+             <img 
+               src={logoIcon} 
+               alt="Sterling Foods Icon" 
+               className="h-16 md:h-20 lg:h-24 w-auto object-contain" 
+             />
+           </div>
 
-          {/* Top Right: Navigation Links Grid */}
-          <div className="flex gap-12 md:gap-32 text-base font-inter tracking-normal">
-            
-            {/* Column 1 */}
-            <div className="flex flex-col gap-4">
-              <Link to="/" className="hover:opacity-60 transition-opacity">Home</Link>
-              <Link to="/our-story" className="hover:opacity-60 transition-opacity">Our story</Link>
-              <Link to="/sourcing" className="hover:opacity-60 transition-opacity">Sourcing</Link>
-              <Link to="/processing" className="hover:opacity-60 transition-opacity">Processing</Link>
-              <Link to="/products" className="hover:opacity-60 transition-opacity">Products</Link>
-            </div>
-
-            {/* Column 2 */}
-            <div className="flex flex-col gap-4">
-              <Link to="/global-presence" className="hover:opacity-60 transition-opacity">Global Presence</Link>
-              <Link to="/contact" className="hover:opacity-60 transition-opacity">Contact Us</Link>
-            </div>
-          </div>
+           {/* Navigation Columns - Readable Text Sizes */}
+           <div className="flex gap-12 md:gap-32 text-base md:text-lg font-inter">
+              <div className="flex flex-col gap-4 md:gap-5">
+                 <Link to="/" className="hover:opacity-60 transition-opacity">Home</Link>
+                 <Link to="/our-story" className="hover:opacity-60 transition-opacity">Our story</Link>
+                 <Link to="/sourcing" className="hover:opacity-60 transition-opacity">Sourcing</Link>
+                 <Link to="/processing" className="hover:opacity-60 transition-opacity">Processing</Link>
+                 <Link to="/products" className="hover:opacity-60 transition-opacity">Products</Link>
+              </div>
+              <div className="flex flex-col gap-4 md:gap-5">
+                 <Link to="/global-presence" className="hover:opacity-60 transition-opacity">Global Presence</Link>
+                 <Link to="/contact" className="hover:opacity-60 transition-opacity">Contact Us</Link>
+              </div>
+           </div>
         </div>
 
-        {/* --- Middle Section: Legal Links --- */}
-        <div className="flex flex-col md:flex-row justify-between items-center text-base font-inter tracking-normal w-full gap-4 md:gap-0">
-          <Link to="/terms" className="hover:opacity-60 transition-opacity">Terms of Service</Link>
-          <Link to="/acceptable-use" className="hover:opacity-60 transition-opacity">Acceptable Use Policy</Link>
-          <span>Pika © 2026. All rights reserved.</span>
-          <Link to="/privacy" className="hover:opacity-60 transition-opacity">Privacy Policy</Link>
+        {/* --- Reduced Dynamic Spacer --- */}
+        {/* Shrank the spacer from 15vw down to a clean 100px/128px to reduce footer height */}
+        <div className="h-20 md:h-32"></div>
+
+        {/* --- Middle Row: Legal Links --- */}
+        {/* Perfectly Distributed: Removed nested groups. justify-between now spaces all 4 elements equally! */}
+        <div className="w-full flex flex-col md:flex-row justify-between items-center text-sm md:text-base lg:text-lg font-inter gap-4 md:gap-0 mb-8 md:mb-10">
+           <Link to="/terms" className="hover:opacity-60 transition-opacity">Terms of Service</Link>
+           <Link to="/acceptable-use" className="hover:opacity-60 transition-opacity">Acceptable Use Policy</Link>
+           <span className="text-center">Pika © 2026. All rights reserved.</span>
+           <Link to="/privacy" className="hover:opacity-60 transition-opacity">Privacy Policy</Link>
+        </div>
+
+        {/* --- Bottom Section: Giant Typography Lockup --- */}
+        <div className="w-full flex flex-col items-center select-none pointer-events-none">
+           
+           {/* Top Layer: Sliced Light Blue Text */}
+           {/* Height adjusted mathematically to match new scale */}
+           <div className="relative w-full h-[8vw] md:h-[4cqw] overflow-hidden flex justify-center mb-3 md:mb-[1cqw]">
+              <span 
+                 className="absolute top-[2vw] md:top-[0.8cqw] font-seasons uppercase text-[#7392A9] whitespace-nowrap tracking-tight" 
+                 // Scaled up to 13.5cqw to stretch edge-to-edge
+                 style={{ fontSize: 'clamp(4rem, 13.5cqw, 260px)', lineHeight: '0.6' }}
+              >
+                 STERLING FOODS
+              </span>
+           </div>
+
+           {/* Bottom Layer: Full Dark Blue Text */}
+           <div 
+              className="w-full flex justify-center font-seasons uppercase text-[#001321] whitespace-nowrap tracking-tight" 
+              style={{ fontSize: 'clamp(4rem, 13.5cqw, 260px)', lineHeight: '0.6' }}
+           >
+              STERLING FOODS
+           </div>
+
         </div>
 
       </motion.div>
-
-      {/* --- Bottom Section: Clipped & Stacked Typography --- */}
-      {/* This is mapped exactly to the Figma coordinates:
-        - Font Size: 223px / 1920px = 11.6vw
-        - Clipped Box Height: 63px = 3.3vw
-        - Gap between text: 23px = 1.2vw
-      */}
-      <div className="w-full flex flex-col items-center select-none pointer-events-none mt-16 md:mt-[6vw] pb-[2vw]">
-        
-        {/* Top Layer: Sliced Light Blue Text */}
-        <div 
-          className="relative w-full overflow-hidden flex justify-center" 
-          style={{ height: '3.3vw', marginBottom: '1.2vw' }}
-        >
-          <span 
-            className="absolute font-seasons uppercase text-[#7392A9] whitespace-nowrap"
-            // top: 1vw matches the 19px push-down in Figma
-            style={{ fontSize: '11.6vw', lineHeight: '0.58', top: '1vw' }}
-          >
-            STERLING FOODS
-          </span>
-        </div>
-        
-        {/* Bottom Layer: Full Dark Blue Text */}
-        <div 
-          className="font-seasons uppercase text-[#001321] whitespace-nowrap flex justify-center w-full"
-          style={{ fontSize: '11.6vw', lineHeight: '0.58' }}
-        >
-          STERLING FOODS
-        </div>
-        
-      </div>
     </footer>
   );
 };
