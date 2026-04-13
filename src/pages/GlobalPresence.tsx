@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
+import Preloader from '../components/layout/Preloader';
+import Skeleton from '../components/layout/Skeleton';
+import { useAssetLoader } from '../hooks/useAssetLoader';
 
 // --- Asset Imports ---
 import heroImg from '../assets/images/global-presence/hero.png';
@@ -77,6 +80,7 @@ const topRowLogos = [haccp, ssop, gmp, india, eu];
 const bottomRowLogos = [aeo, fssai, brc, fda];
 
 const GlobalPresencePage = () => {
+  const isPageLoading = useAssetLoader([heroImg]);
   const [hoveredLocation, setHoveredLocation] = useState<string | null>(null);
 
   // Reusable component for Corinthia/Seasons headings
@@ -134,8 +138,10 @@ const GlobalPresencePage = () => {
   };
 
   return (
-    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-32">
-      <Navbar />
+    <>
+      <Preloader isLoading={isPageLoading} />
+      <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-32">
+        <Navbar />
 
       {/* ═══════════════════════════════════════════════════
           SECTION 1 — HERO 
@@ -197,11 +203,15 @@ const GlobalPresencePage = () => {
 
         {/* Map Container */}
         <div className="relative w-full max-w-[1600px] aspect-[16/9] mx-auto mb-32">
-          <motion.img 
+          <motion.div 
             initial={{ opacity: 0 }} whileInView={{ opacity: 0.3 }} viewport={{ once: true }} transition={{ duration: 1.5 }}
-            src={mapImg} alt="Global Export Map" 
-            className="w-full h-full object-contain pointer-events-none"
-          />
+            className="absolute inset-0 z-0"
+          >
+            <div className="relative w-full h-full overflow-hidden">
+              <Skeleton className="absolute inset-0 z-0" />
+              <img src={mapImg} alt="Global Export Map" className="relative w-full h-full object-contain pointer-events-none z-10" loading="lazy" />
+            </div>
+          </motion.div>
 
           {/* INTERACTIVE FISH LAYER */}
           <motion.div variants={fishContainerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute inset-0 z-20">
@@ -312,7 +322,8 @@ const GlobalPresencePage = () => {
         </motion.div>
       </div>
 
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import quoteBg from '../../assets/images/home/quotebg.png';
+import Skeleton from '../layout/Skeleton';
 
 // --- CLEANED UP WORD COMPONENT ---
 const Word = ({ 
@@ -16,8 +17,10 @@ const Word = ({
   const opacity = useTransform(progress, range, [0.05, 1]);
   
   return (
+    // Step 2 — willChange pre-promotes every word to its own GPU layer so the
+    // browser doesn't re-composite the page on every scroll-driven opacity tick.
     <motion.span 
-      style={{ opacity }} 
+      style={{ opacity, willChange: 'opacity' }} 
       className="inline-block mr-[0.25em] mb-[0.1em]"
     >
       {children}
@@ -45,19 +48,23 @@ const QuoteSection = () => {
         
         {/* Background Image & 25px Blur */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src={quoteBg} 
-            alt="Abstract Background" 
-            // FIX 1: Tell the browser to load this image immediately, don't wait for scroll
-            loading="eager" 
-            fetchPriority="high"
-            // FIX 2: Force the GPU to pre-calculate the blur before you arrive
-            style={{ 
-              willChange: 'filter, transform',
-              transform: 'translateZ(0)' // Hardware acceleration trigger
-            }}
-            className="h-[120%] w-[120%] -left-[0%] -top-[10%] absolute object-cover blur-[25px] opacity-60"
-          />
+          <div className="relative w-full h-full overflow-hidden blur-[25px]">
+            <Skeleton className="absolute inset-0 z-0" />
+            {/* Step 2 — willChange + translateZ(0) offloads the blurred BG to GPU.
+                 Step 4 — decoding=async stops the main thread freezing on decode. */}
+            <img 
+              src={quoteBg} 
+              alt="Abstract Background" 
+              loading="eager" 
+              fetchPriority="high"
+              decoding="async"
+              style={{ 
+                willChange: 'filter, transform',
+                transform: 'translateZ(0)'
+              }}
+              className="h-[120%] w-[120%] -left-[0%] -top-[10%] absolute object-cover opacity-60 z-10"
+            />
+          </div>
           <div className="absolute inset-0 bg-[#001321]/40 mix-blend-multiply"></div>
         </div>
 

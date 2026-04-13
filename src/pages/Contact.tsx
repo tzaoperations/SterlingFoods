@@ -1,10 +1,13 @@
 import { motion, type Variants } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
+import Preloader from '../components/layout/Preloader';
+import { useAssetLoader } from '../hooks/useAssetLoader';
 
 // --- Asset Imports ---
 import starfishImg from '../assets/images/contact/image.png';
 
 const ContactPage = () => {
+  const isPageLoading = useAssetLoader([starfishImg]);
 
   // --- Animation Variants ---
   const fadeUp: Variants = {
@@ -34,8 +37,10 @@ const ContactPage = () => {
   );
 
   return (
-    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col min-h-screen">
-      <Navbar />
+    <>
+      <Preloader isLoading={isPageLoading} />
+      <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col min-h-screen">
+        <Navbar />
 
       {/* ═══════════════════════════════════════════════════
           CONTACT FORM SECTION (Mapped to 1920x1080)
@@ -144,7 +149,8 @@ const ContactPage = () => {
         </motion.div>
 
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

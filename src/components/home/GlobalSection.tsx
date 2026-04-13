@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import Skeleton from '../layout/Skeleton';
 
 // --- Asset Imports ---
 import mapImg from '../../assets/map.png'; 
@@ -122,10 +123,15 @@ const GlobalSection = () => {
       <div className="relative w-full max-w-[1600px] aspect-[16/9] mx-auto mb-32" style={{ containerType: 'inline-size' }}>
         
         {/* Map Background */}
-        <motion.img 
+        <motion.div 
           initial={{ opacity: 0 }} whileInView={{ opacity: 0.3 }} viewport={{ once: true }} transition={{ duration: 1.5 }}
-          src={mapImg} alt="Global Export Map" className="w-full h-full object-contain pointer-events-none"
-        />
+          className="absolute inset-0 z-0"
+        >
+          <div className="relative w-full h-full overflow-hidden">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={mapImg} alt="Global Export Map" className="relative w-full h-full object-contain pointer-events-none z-10" loading="lazy" />
+          </div>
+        </motion.div>
 
         {/* INTERACTIVE FISH LAYER */}
         <motion.div variants={fishContainerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute inset-0 z-20">

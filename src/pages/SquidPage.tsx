@@ -2,6 +2,9 @@ import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
+import Preloader from '../components/layout/Preloader';
+import Skeleton from '../components/layout/Skeleton';
+import { useAssetLoader } from '../hooks/useAssetLoader';
 
 // --- Asset Imports ---
 import squid2Img from '../assets/images/home/squid2.png';
@@ -25,6 +28,8 @@ const productShapes = [
 ];
 
 const SquidPage = () => {
+  const isPageLoading = useAssetLoader([squidImg, squid2Img]);
+
   // --- Cursor Tracking State for Section 2 ---
   const [hoveredShape, setHoveredShape] = useState<string | null>(null);
   const section2Ref = useRef<HTMLDivElement>(null);
@@ -62,8 +67,10 @@ const SquidPage = () => {
   );
 
   return (
-    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-32">
-      <Navbar />
+    <>
+      <Preloader isLoading={isPageLoading} />
+      <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-32">
+        <Navbar />
 
       {/* ═══════════════════════════════════════════════════
           SECTION 1 — INTRO 
@@ -171,11 +178,26 @@ const SquidPage = () => {
         />
 
         <div className="absolute top-[25.46%] w-full px-[3.125%] flex flex-row items-center justify-between gap-[2cqw]">
-          <img src={gal1} alt="Gallery 1" className="w-[10.1%] aspect-[194/216] object-cover shadow-xl" />
-          <img src={gal2} alt="Gallery 2" className="w-[19.11%] aspect-[367/430] object-cover shadow-xl" />
-          <img src={gal3} alt="Gallery 3" className="w-[28.12%] aspect-[540/654] object-cover shadow-2xl" />
-          <img src={gal5} alt="Gallery 4" className="w-[19.11%] aspect-[367/430] object-cover shadow-xl" />
-          <img src={gal6} alt="Gallery 5" className="w-[10.1%] aspect-[194/216] object-cover shadow-xl" />
+          <div className="relative w-[10.1%] aspect-[194/216] overflow-hidden shadow-xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={gal1} alt="Gallery 1" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div className="relative w-[19.11%] aspect-[367/430] overflow-hidden shadow-xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={gal2} alt="Gallery 2" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div className="relative w-[28.12%] aspect-[540/654] overflow-hidden shadow-2xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={gal3} alt="Gallery 3" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div className="relative w-[19.11%] aspect-[367/430] overflow-hidden shadow-xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={gal5} alt="Gallery 4" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div className="relative w-[10.1%] aspect-[194/216] overflow-hidden shadow-xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={gal6} alt="Gallery 5" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
         </div>
       </div>
 
@@ -183,11 +205,15 @@ const SquidPage = () => {
           SECTION 4 — MASSIVE MAIN IMAGE
       ═══════════════════════════════════════════════════ */}
       <div className="w-full max-w-[1920px] mx-auto my-12">
-        <img 
-          src={mainImg} 
-          alt="Main squid dish" 
-          className="w-full aspect-video object-cover shadow-2xl" 
-        />
+        <div className="relative w-full aspect-video overflow-hidden shadow-2xl">
+          <Skeleton className="absolute inset-0 z-0" />
+          <img 
+            src={mainImg} 
+            alt="Main squid dish" 
+            className="relative z-10 w-full h-full object-cover" 
+            loading="lazy"
+          />
+        </div>
       </div>
 
       {/* ═══════════════════════════════════════════════════
@@ -203,11 +229,15 @@ const SquidPage = () => {
         />
 
         <div className="absolute left-[3.125%] top-[26.48%] w-[30.46%] flex flex-col gap-[2cqw]">
-          <img 
-            src={shrimpImg} 
-            alt="Vannamei Shrimp" 
-            className="w-full aspect-[585/430] object-cover shadow-2xl" 
-          />
+          <div className="relative w-full aspect-[585/430] overflow-hidden shadow-2xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img 
+              src={shrimpImg} 
+              alt="Vannamei Shrimp" 
+              className="relative z-10 w-full h-full object-cover" 
+              loading="lazy"
+            />
+          </div>
           
           <h3 className="font-seasons text-[#C7D2D9] capitalize leading-tight mt-[1cqw]" style={{ fontSize: 'clamp(1.2rem, 1.66cqw, 32px)' }}>
             Vannamei Shrimp
@@ -231,7 +261,8 @@ const SquidPage = () => {
 
       </div>
 
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -1,6 +1,9 @@
 import { useRef, useState } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent, type Variants } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
+import Preloader from '../components/layout/Preloader';
+import Skeleton from '../components/layout/Skeleton';
+import { useAssetLoader } from '../hooks/useAssetLoader';
 
 // --- Asset Imports ---
 import heroImg from '../assets/images/our-story/hero.png';
@@ -29,6 +32,8 @@ const timelineData = [
 ];
 
 const OurStoryPage = () => {
+  const isPageLoading = useAssetLoader([heroImg]);
+
   // --- Scroll Tracking State ---
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -72,8 +77,10 @@ const OurStoryPage = () => {
   };
 
   return (
-    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-0">
-      <Navbar />
+    <>
+      <Preloader isLoading={isPageLoading} />
+      <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-0">
+        <Navbar />
 
       {/* ═══════════════════════════════════════════════════
           SECTION 1 — HERO & INTRO
@@ -125,17 +132,25 @@ const OurStoryPage = () => {
           className="absolute left-[71.13%] top-[5.42%] w-[6.16%] h-auto z-10" 
         />
 
-        <motion.img 
+        <motion.div 
           variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} 
-          src={legacy1} alt="Fishing techniques" 
-          className="absolute left-[33.8%] top-[13.96%] w-[31.4%] h-[46.85%] object-cover shadow-2xl z-20" 
-        />
+          className="absolute left-[33.8%] top-[13.96%] w-[31.4%] h-[46.85%] shadow-2xl z-20" 
+        >
+          <div className="relative w-full h-full overflow-hidden">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={legacy1} alt="Fishing techniques" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+        </motion.div>
 
-        <motion.img 
+        <motion.div 
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} 
-          src={legacy2} alt="Processing lines" 
-          className="absolute left-[21.3%] top-[31.68%] w-[14.68%] h-[19.74%] object-cover shadow-2xl z-30" 
-        />
+          className="absolute left-[21.3%] top-[31.68%] w-[14.68%] h-[19.74%] shadow-2xl z-30" 
+        >
+          <div className="relative w-full h-full overflow-hidden">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={legacy2} alt="Processing lines" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+        </motion.div>
 
         <motion.div 
           variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.4 }} 
@@ -258,7 +273,10 @@ const OurStoryPage = () => {
                     className="absolute shadow-2xl overflow-hidden"
                     style={{ zIndex: isActive ? 20 : 10 }}
                   >
-                    <img src={data.imageLeft} alt="History Phase Left" className="w-full h-full object-cover scale-110" />
+                    <div className="relative w-full h-full overflow-hidden">
+                      <Skeleton className="absolute inset-0 z-0" />
+                      <img src={data.imageLeft} alt="History Phase Left" className="relative z-10 w-full h-full object-cover scale-110" loading="lazy" />
+                    </div>
                   </motion.div>
 
                   {/* THE RIGHT IMAGE */}
@@ -277,7 +295,10 @@ const OurStoryPage = () => {
                     className="absolute shadow-2xl overflow-hidden"
                     style={{ zIndex: isPrev ? 25 : 15 }}
                   >
-                    <img src={data.imageRight} alt="History Phase Right" className="w-full h-full object-cover scale-110" />
+                    <div className="relative w-full h-full overflow-hidden">
+                      <Skeleton className="absolute inset-0 z-0" />
+                      <img src={data.imageRight} alt="History Phase Right" className="relative z-10 w-full h-full object-cover scale-110" loading="lazy" />
+                    </div>
                   </motion.div>
                   
                 </div>
@@ -335,7 +356,8 @@ const OurStoryPage = () => {
         </div>
       </div>
 
-    </div>
+      </div>
+    </>
   );
 };
 

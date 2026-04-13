@@ -2,6 +2,9 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform, type Variants } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
+import Preloader from '../components/layout/Preloader';
+import Skeleton from '../components/layout/Skeleton';
+import { useAssetLoader } from '../hooks/useAssetLoader';
 
 // --- Asset Imports ---
 import heroImg from '../assets/images/sourcing/hero.png';
@@ -82,13 +85,17 @@ const RevealRow = ({ title, text, imageSrc, isBold = false }: { title: string, t
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[14vw] aspect-square z-10"
         style={{ y }}
       >
-        <img src={imageSrc} alt={title} className="w-full h-full object-cover" />
+        <div className="relative w-full h-full overflow-hidden">
+          <Skeleton className="absolute inset-0 z-0" />
+          <img src={imageSrc} alt={title} className="relative z-10 w-full h-full object-cover" loading="lazy" />
+        </div>
       </motion.div>
     </motion.div>
   );
 };
 
 const SourcingPage = () => {
+  const isPageLoading = useAssetLoader([heroImg]);
 
   const MixedHeading = ({ firstLetter, restOfText, className, style }: { firstLetter: React.ReactNode, restOfText: React.ReactNode, className?: string, style?: React.CSSProperties }) => (
     <h2 className={`text-[#C7D2D9] ${className}`} style={style}>
@@ -122,8 +129,10 @@ const SourcingPage = () => {
   );
 
   return (
-    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col min-h-screen">
-      <Navbar />
+    <>
+      <Preloader isLoading={isPageLoading} />
+      <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col min-h-screen">
+        <Navbar />
 
       {/* ═══════════════════════════════════════════════════
           SECTION 1 — HERO
@@ -158,9 +167,19 @@ const SourcingPage = () => {
           Reliable export quality starts at source. Sterling Foods sources from licensed, regulated fisheries and authorised aquaculture systems operating under defined compliance frameworks.
         </motion.p>
 
-        <motion.img variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} src={phil2} alt="Processing" className="absolute left-[3.125%] top-[58.3%] w-[14.58%] h-[34.5%] object-cover shadow-xl z-20" />
+        <motion.div variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute left-[3.125%] top-[58.3%] w-[14.58%] h-[34.5%] shadow-xl z-20">
+          <div className="relative w-full h-full overflow-hidden">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={phil2} alt="Processing" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+        </motion.div>
         
-        <motion.img variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} src={phil1} alt="Fishing Net" className="absolute left-[66.45%] top-[11.6%] w-[30.4%] h-[66.3%] object-cover shadow-2xl z-10" />
+        <motion.div variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute left-[66.45%] top-[11.6%] w-[30.4%] h-[66.3%] shadow-2xl z-10">
+          <div className="relative w-full h-full overflow-hidden">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={phil1} alt="Fishing Net" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+        </motion.div>
 
         <div className="absolute left-[58%] top-[65%] w-[16%] aspect-square z-30 animate-[spin_22s_linear_infinite]">
           <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-xl">
@@ -196,8 +215,18 @@ const SourcingPage = () => {
             Sourcing is structured around: Species consistency (Loligo for premium programs), landing-condition freshness, size grading at source and controlled transport to processing
           </motion.p>
 
-          <motion.img variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} src={squid2} alt="Squids on blue" className="absolute left-[42.5%] top-[45.5%] w-[22.5%] h-[46.7%] object-cover shadow-2xl z-20" />
-          <motion.img variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} src={squid1} alt="Holding Squid" className="absolute left-[66.25%] top-[23.3%] w-[22.5%] h-[46.7%] object-cover shadow-lg z-10" />
+          <motion.div variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute left-[42.5%] top-[45.5%] w-[22.5%] h-[46.7%] shadow-2xl z-20">
+            <div className="relative w-full h-full overflow-hidden">
+              <Skeleton className="absolute inset-0 z-0" />
+              <img src={squid2} alt="Squids on blue" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+            </div>
+          </motion.div>
+          <motion.div variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute left-[66.25%] top-[23.3%] w-[22.5%] h-[46.7%] shadow-lg z-10">
+            <div className="relative w-full h-full overflow-hidden">
+              <Skeleton className="absolute inset-0 z-0" />
+              <img src={squid1} alt="Holding Squid" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+            </div>
+          </motion.div>
 
           <motion.p variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute left-[66.4%] top-[74%] w-[26.9%] font-poppins font-light text-[#A2ADB4] leading-[1.4]" style={{ fontSize: 'clamp(0.85rem, 1.04cqw, 20px)' }}>
             Supply relationships are built over long-standing operational alignment, ensuring continuity, regulatory compliance, and stable raw material flow.
@@ -209,8 +238,18 @@ const SourcingPage = () => {
 
         {/* PART B: SHRIMP */}
         <div className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[800px]" style={{ containerType: 'inline-size' }}>
-          <motion.img variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} src={shrimp2} alt="Hands holding shrimp" className="absolute left-[11.25%] top-[15.5%] w-[22.5%] h-[46.7%] object-cover shadow-2xl z-20" />
-          <motion.img variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} src={shrimp1} alt="Shrimp on plate" className="absolute left-[35%] top-[37.7%] w-[22.5%] h-[46.7%] object-cover shadow-lg z-10" />
+          <motion.div variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute left-[11.25%] top-[15.5%] w-[22.5%] h-[46.7%] shadow-2xl z-20">
+            <div className="relative w-full h-full overflow-hidden">
+              <Skeleton className="absolute inset-0 z-0" />
+              <img src={shrimp2} alt="Hands holding shrimp" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+            </div>
+          </motion.div>
+          <motion.div variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute left-[35%] top-[37.7%] w-[22.5%] h-[46.7%] shadow-lg z-10">
+            <div className="relative w-full h-full overflow-hidden">
+              <Skeleton className="absolute inset-0 z-0" />
+              <img src={shrimp1} alt="Shrimp on plate" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+            </div>
+          </motion.div>
 
           <motion.p variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className="absolute left-[11.25%] top-[65.9%] w-[22.3%] font-poppins font-light text-[#A2ADB4] leading-[1.4]" style={{ fontSize: 'clamp(0.85rem, 1.04cqw, 20px)' }}>
             Only compliant harvest lots are cleared for processing.
@@ -322,7 +361,8 @@ const SourcingPage = () => {
         </motion.div>
       </div>
 
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Skeleton from '../layout/Skeleton';
 
 import sourcing1 from '../../assets/images/home/sourcing1.png'; 
 import sourcing2 from '../../assets/images/home/sourcing2.png'; 
@@ -28,8 +29,8 @@ const SourcingSection: React.FC = () => {
   const sourcingX = useTransform(scrollYProgress, [0.15, 0.30], ['-100vw', '0vw']);
   const disciplineX = useTransform(scrollYProgress, [0.15, 0.30], ['100vw', '0vw']);
   
-  const bodyTextOpacity = useTransform(scrollYProgress, [0.15, 0.30], [0, 1]);
-  const bodyTextY = useTransform(scrollYProgress, [0.15, 0.30], ['50vh', '0vh']);
+  const bodyTextOpacity = useTransform(scrollYProgress, [0.15, 0.45], [0, 1]);
+  const bodyTextY = useTransform(scrollYProgress, [0.15, 0.45], ['50vh', '0vh']);
 
   // STAGE 3: The Grand Sweep (Images rise from 120vh to -120vh)
   const img1Y = useTransform(scrollYProgress, [0.35, 0.65, 0.90], ['120vh', '0vh', '-120vh']);
@@ -109,45 +110,60 @@ const SourcingSection: React.FC = () => {
             className="absolute z-20 left-[3.3%] w-[14.5%] h-[33.4%] overflow-hidden shadow-2xl"
             style={{ top: '7.6%', y: img1Y }}
           >
-            {/* Height bumped to 180% and offset to -40% to safely handle the dramatic 30% parallax */}
-            <motion.img
-              src={sourcing1} alt="Fish farm"
-              className="absolute w-full h-[180%] top-[-40%] object-cover"
+            <motion.div
+              className="absolute w-full h-[180%] top-[-40%]"
               style={{ y: img1InnerY }}
-            />
+            >
+              <div className="relative w-full h-full overflow-hidden">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={sourcing1} alt="Fish farm" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+              </div>
+            </motion.div>
           </motion.div>
           
           <motion.div
             className="absolute z-20 left-[58.1%] w-[15%] h-[28.5%] overflow-hidden shadow-2xl"
             style={{ top: '26.8%', y: img2Y }}
           >
-            <motion.img
-              src={sourcing2} alt="Pouring water"
-              className="absolute w-full h-[180%] top-[-40%] object-cover"
+            <motion.div
+              className="absolute w-full h-[180%] top-[-40%]"
               style={{ y: img2InnerY }}
-            />
+            >
+              <div className="relative w-full h-full overflow-hidden">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={sourcing2} alt="Pouring water" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+              </div>
+            </motion.div>
           </motion.div>
           
           <motion.div
             className="absolute z-20 left-[26.8%] w-[14.5%] h-[31.7%] overflow-hidden shadow-2xl"
             style={{ top: '74.1%', y: img3Y }}
           >
-            <motion.img
-              src={sourcing3} alt="Raw shrimp"
-              className="absolute w-full h-[180%] top-[-40%] object-cover"
+            <motion.div
+              className="absolute w-full h-[180%] top-[-40%]"
               style={{ y: img3InnerY }}
-            />
+            >
+              <div className="relative w-full h-full overflow-hidden">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={sourcing3} alt="Raw shrimp" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+              </div>
+            </motion.div>
           </motion.div>
           
           <motion.div
             className="absolute z-20 left-[74.3%] w-[14.5%] h-[31.7%] overflow-hidden shadow-2xl"
             style={{ top: '89.1%', y: img4Y }}
           >
-            <motion.img
-              src={sourcing4} alt="Fish net"
-              className="absolute w-full h-[180%] top-[-40%] object-cover"
+            <motion.div
+              className="absolute w-full h-[180%] top-[-40%]"
               style={{ y: img4InnerY }}
-            />
+            >
+              <div className="relative w-full h-full overflow-hidden">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={sourcing4} alt="Fish net" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+              </div>
+            </motion.div>
           </motion.div>
 
         </div>

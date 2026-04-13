@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion, type Variants } from 'framer-motion';
+import Skeleton from './Skeleton';
 
 // Import the specific logo icon
 import logoIcon from '../../assets/images/shared/Sterling icon 2.png';
@@ -35,11 +36,15 @@ const Footer = () => {
            
            {/* Logo - Pushed securely to top left */}
            <div className="mb-12 md:mb-0">
-             <img 
-               src={logoIcon} 
-               alt="Sterling Foods Icon" 
-               className="h-16 md:h-20 lg:h-24 w-auto object-contain" 
-             />
+             <div className="relative h-16 md:h-20 lg:h-24 aspect-square overflow-hidden">
+               <Skeleton className="absolute inset-0 z-0" />
+               <img 
+                 src={logoIcon} 
+                 alt="Sterling Foods Icon" 
+                 className="relative z-10 h-full w-auto object-contain" 
+                 loading="lazy"
+               />
+             </div>
            </div>
 
            {/* Navigation Columns - Readable Text Sizes */}

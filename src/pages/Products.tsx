@@ -2,6 +2,9 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform, type Variants, type MotionValue } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
+import Preloader from '../components/layout/Preloader';
+import Skeleton from '../components/layout/Skeleton';
+import { useAssetLoader } from '../hooks/useAssetLoader';
 
 // --- Asset Imports ---
 import heroImg from '../assets/images/products/hero.png';
@@ -23,7 +26,9 @@ const Word = ({
 }) => {
   const opacity = useTransform(progress, range, [0.05, 1]);
   return (
-    <motion.span style={{ opacity }} className="inline-block mr-[0.25em] mb-[0.1em]">
+    // Step 2 — willChange pre-promotes every word to its own GPU layer so the
+    // browser doesn't re-composite the page on every scroll-driven opacity tick.
+    <motion.span style={{ opacity, willChange: 'opacity' }} className="inline-block mr-[0.25em] mb-[0.1em]">
       {children}
     </motion.span>
   );
@@ -50,17 +55,23 @@ const QuoteSection = () => {
         
         {/* Background Image & 25px Blur */}
         <div className="absolute inset-0 z-0">
-          <img
-            src={quoteBg}
-            alt="Abstract Background"
-            loading="eager"
-            fetchPriority="high"
-            style={{
-              willChange: 'filter, transform',
-              transform: 'translateZ(0)',
-            }}
-            className="absolute h-[120%] w-[120%] -left-[0%] -top-[10%] object-cover blur-[25px] opacity-60"
-          />
+          <div className="relative w-full h-full overflow-hidden blur-[25px]">
+            <Skeleton className="absolute inset-0 z-0" />
+            {/* Step 2 — willChange + translateZ(0) offloads the blurred BG to GPU.
+                 Step 4 — decoding=async stops main thread freezing on decode. */}
+            <img
+              src={quoteBg}
+              alt="Abstract Background"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              style={{
+                willChange: 'filter, transform',
+                transform: 'translateZ(0)',
+              }}
+              className="absolute h-[120%] w-[120%] -left-[0%] -top-[10%] object-cover opacity-60 z-10"
+            />
+          </div>
           <div className="absolute inset-0 bg-[#001321]/40 mix-blend-multiply" />
         </div>
 
@@ -100,6 +111,8 @@ const QuoteSection = () => {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 const ProductsPage = () => {
+  const isPageLoading = useAssetLoader([heroImg]);
+
   const fadeUp: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
@@ -128,10 +141,12 @@ const ProductsPage = () => {
   );
 
   return (
-    // CRITICAL FIX: Changed overflow-x-hidden to overflow-clip. 
-    // This stops horizontal scrolling without breaking the sticky Quote Section!
-    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col">
-      <Navbar />
+    <>
+      {/* CRITICAL FIX: Changed overflow-x-hidden to overflow-clip. 
+      This stops horizontal scrolling without breaking the sticky Quote Section! */}
+      <Preloader isLoading={isPageLoading} />
+      <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col">
+        <Navbar />
 
       {/* ═══════════════════════════════════════════════════
           SECTION 1 — HERO 
@@ -192,8 +207,13 @@ const ProductsPage = () => {
         >
           {/* LEFT COLUMN: Shrimp */}
           <div className="w-full md:w-[48%] flex flex-col gap-6">
-            <motion.div variants={fadeUp} className="w-full shadow-2xl overflow-hidden">
-              <img src={shrimpImg} alt="Vannamei Shrimp" className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" style={{ aspectRatio: '585/525' }} />
+            {/* Step 2 — willChange pre-promotes this animated card wrapper to a GPU layer. */}
+            <motion.div variants={fadeUp} className="w-full shadow-2xl overflow-hidden aspect-[585/525]" style={{ willChange: 'transform, opacity' }}>
+              <div className="relative w-full h-full overflow-hidden hover:scale-105 transition-transform duration-700" style={{ transform: 'translateZ(0)' }}>
+                <Skeleton className="absolute inset-0 z-0" />
+                {/* Step 4 — decoding=async stops main thread freezing on image decode. */}
+                <img src={shrimpImg} alt="Vannamei Shrimp" className="relative z-10 w-full h-full object-cover" loading="lazy" decoding="async" />
+              </div>
             </motion.div>
             
             <motion.h3 variants={fadeUp} className="font-seasons text-[#C7D2D9] capitalize leading-tight mt-4" style={{ fontSize: 'clamp(1.5rem, 2vw, 32px)' }}>
@@ -213,8 +233,13 @@ const ProductsPage = () => {
 
           {/* RIGHT COLUMN: Squid */}
           <div className="w-full md:w-[48%] flex flex-col gap-6">
-            <motion.div variants={fadeUp} className="w-full shadow-2xl overflow-hidden">
-              <img src={squidImg} alt="Squid" className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" style={{ aspectRatio: '586/401' }} />
+            {/* Step 2 — willChange pre-promotes this animated card wrapper to a GPU layer. */}
+            <motion.div variants={fadeUp} className="w-full shadow-2xl overflow-hidden aspect-[586/401]" style={{ willChange: 'transform, opacity' }}>
+              <div className="relative w-full h-full overflow-hidden hover:scale-105 transition-transform duration-700" style={{ transform: 'translateZ(0)' }}>
+                <Skeleton className="absolute inset-0 z-0" />
+                {/* Step 4 — decoding=async stops main thread freezing on image decode. */}
+                <img src={squidImg} alt="Squid" className="relative z-10 w-full h-full object-cover" loading="lazy" decoding="async" />
+              </div>
             </motion.div>
             
             <motion.h3 variants={fadeUp} className="font-seasons text-[#C7D2D9] capitalize leading-tight mt-4" style={{ fontSize: 'clamp(1.5rem, 2vw, 32px)' }}>
@@ -246,19 +271,31 @@ const ProductsPage = () => {
         className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[600px] md:min-h-0"
         style={{ containerType: 'inline-size' }}
       >
-        <motion.img
+        {/* Step 2 — willChange pre-promotes this scroll-triggered wrapper to a GPU layer. */}
+        <motion.div
           variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
-          src={yachtImg}
-          alt="Heritage squid dish"
-          className="absolute left-[58.54%] top-[5.55%] w-[38.33%] h-[88.88%] object-cover shadow-2xl z-10"
-        />
+          className="absolute left-[58.54%] top-[5.55%] w-[38.33%] h-[88.88%] shadow-2xl z-10"
+          style={{ willChange: 'transform, opacity' }}
+        >
+          <div className="relative w-full h-full overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+            <Skeleton className="absolute inset-0 z-0" />
+            {/* Step 4 — decoding=async stops main thread freezing on image decode. */}
+            <img src={yachtImg} alt="Heritage squid dish" className="relative z-10 w-full h-full object-cover" loading="lazy" decoding="async" />
+          </div>
+        </motion.div>
 
-        <motion.img
+        {/* Step 2 — willChange pre-promotes this scroll-triggered wrapper to a GPU layer. */}
+        <motion.div
           variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
-          src={squid2Img}
-          alt="Whole squid"
-          className="absolute left-[3.125%] top-[58.42%] w-[14.58%] h-[22.59%] object-cover shadow-2xl z-10"
-        />
+          className="absolute left-[3.125%] top-[58.42%] w-[14.58%] h-[22.59%] shadow-2xl z-10"
+          style={{ willChange: 'transform, opacity' }}
+        >
+          <div className="relative w-full h-full overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+            <Skeleton className="absolute inset-0 z-0" />
+            {/* Step 4 — decoding=async stops main thread freezing on image decode. */}
+            <img src={squid2Img} alt="Whole squid" className="relative z-10 w-full h-full object-cover" loading="lazy" decoding="async" />
+          </div>
+        </motion.div>
 
         {/* Text Size reduced to max 64px, and line breaks added dynamically */}
         <motion.h2
@@ -294,7 +331,8 @@ const ProductsPage = () => {
         </motion.div>
       </div>
 
-    </div>
+      </div>
+    </>
   );
 };
 

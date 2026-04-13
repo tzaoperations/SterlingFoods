@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
+import Preloader from '../components/layout/Preloader';
+import Skeleton from '../components/layout/Skeleton';
+import { useAssetLoader } from '../hooks/useAssetLoader';
 
 // --- Asset Imports ---
 import shrimpsmallImg from '../assets/images/products/shrimp/shrimpsmall.png';
@@ -13,6 +16,8 @@ import mainImg from '../assets/images/products/shrimp/main.png';
 import squidCardImg from '../assets/images/products/shrimp/squid.png';
 
 const ShrimpPage = () => {
+  const isPageLoading = useAssetLoader([shrimpImg, shrimpsmallImg]);
+
   /// Reusable component for the mixed Corinthia/Seasons headings
   const MixedHeading = ({ firstLetter, restOfText, className, style }: { firstLetter: React.ReactNode, restOfText: React.ReactNode, className?: string, style?: React.CSSProperties }) => (
     <h2 className={`text-[#C7D2D9] ${className}`} style={style}>
@@ -34,8 +39,10 @@ const ShrimpPage = () => {
   );
 
   return (
-    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-32">
-      <Navbar />
+    <>
+      <Preloader isLoading={isPageLoading} />
+      <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-32">
+        <Navbar />
 
       {/* ═══════════════════════════════════════════════════
           SECTION 1 — INTRO 
@@ -88,11 +95,26 @@ const ShrimpPage = () => {
 
         {/* Scaled Gallery Flexbox */}
         <div className="absolute top-[25.46%] w-full px-[3.125%] flex flex-row items-center justify-between gap-[2cqw]">
-          <img src={gal1} alt="Gallery 1" className="w-[10.1%] aspect-[194/216] object-cover shadow-xl" />
-          <img src={gal2} alt="Gallery 2" className="w-[19.11%] aspect-[367/430] object-cover shadow-xl" />
-          <img src={gal3} alt="Gallery 3" className="w-[28.12%] aspect-[540/654] object-cover shadow-2xl" />
-          <img src={gal4} alt="Gallery 4" className="w-[19.11%] aspect-[367/430] object-cover shadow-xl" />
-          <img src={gal5} alt="Gallery 5" className="w-[10.1%] aspect-[194/216] object-cover shadow-xl" />
+          <div className="relative w-[10.1%] aspect-[194/216] overflow-hidden shadow-xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={gal1} alt="Gallery 1" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div className="relative w-[19.11%] aspect-[367/430] overflow-hidden shadow-xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={gal2} alt="Gallery 2" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div className="relative w-[28.12%] aspect-[540/654] overflow-hidden shadow-2xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={gal3} alt="Gallery 3" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div className="relative w-[19.11%] aspect-[367/430] overflow-hidden shadow-xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={gal4} alt="Gallery 4" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div className="relative w-[10.1%] aspect-[194/216] overflow-hidden shadow-xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img src={gal5} alt="Gallery 5" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+          </div>
         </div>
       </div>
 
@@ -100,11 +122,15 @@ const ShrimpPage = () => {
           SECTION 3 — MASSIVE MAIN IMAGE
       ═══════════════════════════════════════════════════ */}
       <div className="w-full max-w-[1920px] mx-auto my-12">
-        <img 
-          src={mainImg} 
-          alt="Main shrimp dish" 
-          className="w-full aspect-video object-cover shadow-2xl" 
-        />
+        <div className="relative w-full aspect-video overflow-hidden shadow-2xl">
+          <Skeleton className="absolute inset-0 z-0" />
+          <img 
+            src={mainImg} 
+            alt="Main shrimp dish" 
+            className="relative z-10 w-full h-full object-cover" 
+            loading="lazy"
+          />
+        </div>
       </div>
 
       {/* ═══════════════════════════════════════════════════
@@ -122,11 +148,15 @@ const ShrimpPage = () => {
 
         {/* Squid Product Card */}
         <div className="absolute left-[3.125%] top-[26.48%] w-[30.46%] flex flex-col gap-[2cqw]">
-          <img 
-            src={squidCardImg} 
-            alt="Squid" 
-            className="w-full aspect-[586/401] object-cover shadow-2xl" 
-          />
+          <div className="relative w-full aspect-[586/401] overflow-hidden shadow-2xl">
+            <Skeleton className="absolute inset-0 z-0" />
+            <img 
+              src={squidCardImg} 
+              alt="Squid" 
+              className="relative z-10 w-full h-full object-cover" 
+              loading="lazy"
+            />
+          </div>
           
           <h3 className="font-seasons text-[#C7D2D9] capitalize leading-tight mt-[1cqw]" style={{ fontSize: 'clamp(1.2rem, 1.66cqw, 32px)' }}>
             Squid
@@ -150,7 +180,8 @@ const ShrimpPage = () => {
 
       </div>
 
-    </div>
+      </div>
+    </>
   );
 };
 

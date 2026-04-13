@@ -2,6 +2,9 @@ import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform, type Variants } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
+import Preloader from '../components/layout/Preloader';
+import Skeleton from '../components/layout/Skeleton';
+import { useAssetLoader } from '../hooks/useAssetLoader';
 
 // --- Asset Imports ---
 import heroBg from '../assets/images/yacht/herobg.png';
@@ -24,6 +27,7 @@ import shrimpCard from '../assets/images/yacht/shrimp.png';
 import squidCard from '../assets/images/yacht/squid.png';
 
 const YachtPage = () => {
+  const isPageLoading = useAssetLoader([heroBg, squidTop]);
 
   // --- Hover State for the Folder Interaction ---
   const [isFolderHovered, setIsFolderHovered] = useState(false);
@@ -113,8 +117,10 @@ const YachtPage = () => {
   };
 
   return (
-    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-32">
-      <Navbar />
+    <>
+      <Preloader isLoading={isPageLoading} />
+      <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-32">
+        <Navbar />
 
       {/* ═══════════════════════════════════════════════════
           SECTION 1 — HERO 
@@ -179,7 +185,10 @@ const YachtPage = () => {
             }}
             className="absolute left-[35.8%] top-[21.2%] w-[15.9%] aspect-[305/435] bg-[#C7D2D9] z-0 shadow-lg p-[0.5cqw] pb-[3.1cqw]"
           >
-            <img src={f2} alt="Prep 1" className="w-full h-full object-cover" />
+            <div className="relative w-full h-full overflow-hidden">
+              <Skeleton className="absolute inset-0 z-0" />
+              <img src={f2} alt="Prep 1" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+            </div>
           </motion.div>
           
           {/* Polaroid 2 (Center) - z-10 keeps it behind the folder but over Polaroid 1 */}
@@ -191,7 +200,10 @@ const YachtPage = () => {
             }}
             className="absolute left-[43.1%] top-[25.7%] w-[16.2%] aspect-[312/424] bg-[#C7D2D9] z-10 shadow-2xl p-[0.5cqw] pb-[3.1cqw]"
           >
-            <img src={f3} alt="Prep 2" className="w-full h-full object-cover" />
+            <div className="relative w-full h-full overflow-hidden">
+              <Skeleton className="absolute inset-0 z-0" />
+              <img src={f3} alt="Prep 2" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+            </div>
           </motion.div>
           
           {/* Polaroid 3 (Right) - z-0 keeps it behind the folder */}
@@ -203,7 +215,10 @@ const YachtPage = () => {
              }}
             className="absolute left-[55%] top-[25.7%] w-[13.8%] aspect-[265/411] bg-[#C7D2D9] z-0 shadow-lg p-[0.5cqw] pb-[3.1cqw]"
           >
-            <img src={f1} alt="Prep 3" className="w-full h-full object-cover" />
+            <div className="relative w-full h-full overflow-hidden">
+              <Skeleton className="absolute inset-0 z-0" />
+              <img src={f1} alt="Prep 3" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+            </div>
           </motion.div>
           
           {/* THE FOLDER: 
@@ -219,10 +234,10 @@ const YachtPage = () => {
               hover: { filter: 'drop-shadow(0px 0px 30px rgba(255,255,255,0.25))', transition: { duration: 0.3 } }
             }}
             // Re-enabled pointer-events-auto so this specific block can detect the mouse
-            className="absolute left-[30%] top-[38.33%] w-[40.58%] h-[39.22%] z-20 pointer-events-auto cursor-pointer"
+            className="absolute left-[30%] top-[38.33%] w-[40.58%] h-[39.22%] z-30 pointer-events-auto cursor-pointer"
           >
             <div 
-              className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/5 to-black/10 backdrop-blur-[14px] backdrop-saturate-150 backdrop-contrast-110 shadow-[inset_0_1px_20px_rgba(255,255,255,0.2)]"
+              className="absolute inset-0 bg-gradient-to-br from-white/25 via-white/15 to-black/10 backdrop-blur-[14px] backdrop-saturate-150 backdrop-contrast-110 shadow-[inset_0_1px_20px_rgba(255,255,255,0.2)]"
               style={{ clipPath: 'polygon(0% 0%, 28% 0%, 38% 18%, 100% 18%, 100% 100%, 0% 100%)' }}
             ></div>
             <img src={folderBg} alt="Folder" className="absolute inset-0 w-full h-full object-fill drop-shadow-2xl pointer-events-none" />
@@ -247,7 +262,7 @@ const YachtPage = () => {
           Yacht began as an internal label for batches that consistently exceeded Sterling’s own quality expectations. Over time, it evolved into a quiet premium brand that remains purposefully restrained. Its foundation is unchanged controlled sourcing, disciplined handling, and alignment maintained over generations.
         </motion.p>
 
-        <motion.img variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} src={premiumSquid} alt="Premium Squid" className="absolute left-[50.6%] top-[5.5%] w-[46.25%] h-[88.8%] object-cover shadow-2xl" />
+        <motion.img variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} src={premiumSquid} alt="Premium Squid" className="absolute left-[50.6%] top-[5.5%] w-[46.25%] h-[88.8%] object-cover shadow-2xl" loading="lazy" />
       </div>
 
       {/* ═══════════════════════════════════════════════════
@@ -277,10 +292,30 @@ const YachtPage = () => {
 
           {/* Center Stack - Images mapped ONLY to scroll opacities */}
           <div className="absolute left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2 w-[24%] aspect-[550/722] z-10 flex items-center justify-center">
-            <motion.img style={{ opacity: img1Opacity }} src={stack1} alt="Dish 1" className="absolute w-full h-full object-cover shadow-2xl rotate-[6.47deg]" />
-            <motion.img style={{ opacity: img2Opacity }} src={stack2} alt="Dish 2" className="absolute w-full h-full object-cover shadow-2xl -rotate-[4.92deg]" />
-            <motion.img style={{ opacity: img3Opacity }} src={stack3} alt="Dish 3" className="absolute w-full h-full object-cover shadow-2xl rotate-[9.37deg]" />
-            <motion.img style={{ opacity: img4Opacity }} src={stack4} alt="Dish 4" className="absolute w-full h-full object-cover shadow-2xl rotate-0" />
+            <motion.div style={{ opacity: img1Opacity }} className="absolute w-full h-full rotate-[6.47deg]">
+              <div className="relative w-full h-full overflow-hidden shadow-2xl rounded-sm">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={stack1} alt="Dish 1" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+              </div>
+            </motion.div>
+            <motion.div style={{ opacity: img2Opacity }} className="absolute w-full h-full -rotate-[4.92deg]">
+              <div className="relative w-full h-full overflow-hidden shadow-2xl rounded-sm">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={stack2} alt="Dish 2" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+              </div>
+            </motion.div>
+            <motion.div style={{ opacity: img3Opacity }} className="absolute w-full h-full rotate-[9.37deg]">
+              <div className="relative w-full h-full overflow-hidden shadow-2xl rounded-sm">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={stack3} alt="Dish 3" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+              </div>
+            </motion.div>
+            <motion.div style={{ opacity: img4Opacity }} className="absolute w-full h-full rotate-0">
+              <div className="relative w-full h-full overflow-hidden shadow-2xl rounded-sm">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={stack4} alt="Dish 4" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+              </div>
+            </motion.div>
           </div>
 
         </div>
@@ -298,8 +333,11 @@ const YachtPage = () => {
         <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} className="w-full max-w-[1200px] px-6 flex flex-col md:flex-row justify-between gap-12 md:gap-8">
           
           <div className="w-full md:w-[48%] flex flex-col gap-6">
-            <motion.div variants={fadeUp} className="w-full shadow-2xl overflow-hidden">
-              <img src={shrimpCard} alt="Vannamei Shrimp" className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" style={{ aspectRatio: '585/525' }} />
+            <motion.div variants={fadeUp} className="w-full shadow-2xl overflow-hidden hover:scale-105 transition-transform duration-700">
+              <div className="relative w-full h-full overflow-hidden" style={{ aspectRatio: '585/525' }}>
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={shrimpCard} alt="Vannamei Shrimp" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+              </div>
             </motion.div>
             <motion.h3 variants={fadeUp} className="font-seasons text-[#C7D2D9] capitalize leading-tight mt-4" style={{ fontSize: 'clamp(1.5rem, 2vw, 32px)' }}>Vannamei Shrimp</motion.h3>
             <motion.p variants={fadeUp} className="font-poppins font-light text-[#A2ADB4] leading-[1.4]" style={{ fontSize: 'clamp(0.85rem, 1vw, 20px)' }}>
@@ -309,8 +347,11 @@ const YachtPage = () => {
           </div>
 
           <div className="w-full md:w-[48%] flex flex-col gap-6">
-            <motion.div variants={fadeUp} className="w-full shadow-2xl overflow-hidden">
-              <img src={squidCard} alt="Squid" className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" style={{ aspectRatio: '586/401' }} />
+            <motion.div variants={fadeUp} className="w-full shadow-2xl overflow-hidden hover:scale-105 transition-transform duration-700">
+              <div className="relative w-full h-full overflow-hidden" style={{ aspectRatio: '586/401' }}>
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={squidCard} alt="Squid" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+              </div>
             </motion.div>
             <motion.h3 variants={fadeUp} className="font-seasons text-[#C7D2D9] capitalize leading-tight mt-4" style={{ fontSize: 'clamp(1.5rem, 2vw, 32px)' }}>Squid</motion.h3>
             <motion.p variants={fadeUp} className="font-poppins font-light text-[#A2ADB4] leading-[1.4]" style={{ fontSize: 'clamp(0.85rem, 1vw, 20px)' }}>
@@ -322,7 +363,8 @@ const YachtPage = () => {
         </motion.div>
       </div>
 
-    </div>
+      </div>
+    </>
   );
 };
 

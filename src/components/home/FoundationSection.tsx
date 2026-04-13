@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, type Variants } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import Skeleton from '../layout/Skeleton';
 
 // Asset Imports
 import heritage1 from '../../assets/images/home/heritage1.png'; // Sauce Pouring
@@ -30,25 +31,25 @@ const FoundationSection = () => {
 
   const p1Op = useTransform(scrollYProgress, [0.05, 0.15], [0, 1]);
 
-  const p1Y = useTransform(scrollYProgress, [0.05, 0.15], [30, 0]);
+  const p1Y = useTransform(scrollYProgress, [0.05, 0.15], [50, 0]);
 
 
 
   const p2Op = useTransform(scrollYProgress, [0.15, 0.25], [0, 1]);
 
-  const p2Y = useTransform(scrollYProgress, [0.15, 0.25], [30, 0]);
+  const p2Y = useTransform(scrollYProgress, [0.15, 0.25], [50, 0]);
 
 
 
   const p3Op = useTransform(scrollYProgress, [0.25, 0.35], [0, 1]);
 
-  const p3Y = useTransform(scrollYProgress, [0.25, 0.35], [30, 0]);
+  const p3Y = useTransform(scrollYProgress, [0.25, 0.35], [50, 0]);
 
 
 
   const p4Op = useTransform(scrollYProgress, [0.35, 0.45], [0, 1]);
 
-  const p4Y = useTransform(scrollYProgress, [0.35, 0.45], [30, 0]);
+  const p4Y = useTransform(scrollYProgress, [0.35, 0.45], [50, 0]);
   // --------------------------------
 
   const fadeIn: Variants = {
@@ -75,7 +76,11 @@ const FoundationSection = () => {
     }
   };
 
-  // Defines exactly how the images move between the "Front" and "Back" positions
+  // Step 1 & 3 — cardVariants no longer animates `filter`.
+  // Size/position changes (left, width, height) trigger layout recalcs; the
+  // `layout` prop on each motion.div converts them to GPU-accelerated FLIP
+  // transforms instead. A separate opacity overlay handles the dark/grayscale
+  // effect so we never animate a CSS filter directly.
   const cardVariants = {
     active: { // Front, large, full color
       left: "0%",
@@ -83,7 +88,6 @@ const FoundationSection = () => {
       width: "68%", 
       height: "100%",
       zIndex: 20,
-      filter: "brightness(1) grayscale(0) contrast(1)",
       transition: { type: "spring", stiffness: 200, damping: 25 }
     },
     inactive: { // Back, smaller, dark/grayscale
@@ -92,9 +96,14 @@ const FoundationSection = () => {
       width: "28%",
       height: "85%",
       zIndex: 10,
-      filter: "brightness(0.5) grayscale(1) contrast(1.25)",
       transition: { type: "spring", stiffness: 200, damping: 25 }
     }
+  };
+
+  // Step 3 — overlay variants: animating opacity is practically free for the GPU.
+  const overlayVariants = {
+    active: { opacity: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+    inactive: { opacity: 1, transition: { duration: 0.35, ease: 'easeOut' } },
   };
   return (
     <section className="relative w-full bg-[#001321] px-6 py-32 text-[#E6F1F8] md:px-12 lg:py-48">
@@ -127,11 +136,17 @@ const FoundationSection = () => {
           </motion.h2>
 
           {/* Top Right Image (Sauce Pouring) - Exact Math */}
+          {/* Step 2 — willChange offloads this animated wrapper to the GPU */}
           <motion.div 
             className="absolute top-[10.4%] right-[3.1%] hidden md:block w-[22.5%] z-10"
             variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }}
+            style={{ willChange: 'transform, opacity' }}
           >
-            <img src={heritage1} alt="Sauce Pouring" className="w-full object-contain shadow-2xl" />
+            <div className="relative w-full h-full overflow-hidden shadow-2xl" style={{ transform: 'translateZ(0)' }}>
+              <Skeleton className="absolute inset-0 z-0" />
+              {/* Step 4 — decoding=async prevents main-thread freeze during image decode */}
+              <img src={heritage1} alt="Sauce Pouring" className="relative z-10 w-full object-contain" loading="lazy" decoding="async" />
+            </div>
           </motion.div>
 
           {/* Subtext - Slightly Larger Math */}
@@ -146,18 +161,24 @@ const FoundationSection = () => {
           </motion.div>
 
           {/* Bottom Left Image (Plated Shrimp) - Exact Math */}
+          {/* Step 2 — willChange offloads this animated wrapper to the GPU */}
           <motion.div 
             className="absolute top-[62.2%] left-[3.1%] hidden md:block w-[14.5%] z-20"
             variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.4 }}
+            style={{ willChange: 'transform, opacity' }}
           >
-            <img src={heritage2} alt="Plated Shrimp" className="w-full object-contain shadow-2xl" />
+            <div className="relative w-full h-full overflow-hidden shadow-2xl" style={{ transform: 'translateZ(0)' }}>
+              <Skeleton className="absolute inset-0 z-0" />
+              {/* Step 4 — decoding=async prevents main-thread freeze during image decode */}
+              <img src={heritage2} alt="Plated Shrimp" className="relative z-10 w-full object-contain" loading="lazy" decoding="async" />
+            </div>
           </motion.div>
 
         </div>
 
        {/* --- 2. OPERATING PROGRAMS SECTION (Pinned Scroll Sequence) --- */}
         {/* Reduced to h-[300vh] for a tighter, faster scroll experience */}
-        <div ref={programsRef} className="relative w-full h-[1200vh] mb-32 z-20">
+        <div ref={programsRef} className="relative w-full h-[1100vh] mb-32 z-20">
           
           {/* CRITICAL: overflow-visible ensures the fish is NEVER chopped in half */}
           <div className="sticky top-0 w-full h-screen flex flex-col justify-center items-center overflow-visible bg-[#001321]">
@@ -180,16 +201,20 @@ const FoundationSection = () => {
               </motion.h3>
 
               {/* Central Illustration (Fish) - Disconnected from scroll, triggers immediately! */}
+              {/* Step 2 — heavy scroll-driven element gets its own GPU layer */}
               <motion.div 
                 className="absolute top-[-37.6%] left-[45%] w-[90%] md:w-[40%] pointer-events-none z-0"
-                // Standard Framer Motion trigger -> Fades in as soon as it enters the screen
                 initial={{ opacity: 0, y: 50 }} 
                 whileInView={{ opacity: 1, y: 0 }} 
                 transition={{ duration: 1.5, ease: "easeOut" }}
-                // amount: 0.1 ensures it triggers even if only a tiny bit of the top is visible
                 viewport={{ once: true, amount: 0.1 }}
+                style={{ willChange: 'transform, opacity' }}
               >
-                <img src={fishOutline} alt="Fish illustration" className="w-full h-auto object-contain brightness-125 drop-shadow-2xl" />
+                <div className="relative w-full h-full overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+                  <Skeleton className="absolute inset-0 z-0 bg-transparent animate-none" />
+                  {/* Step 4 — decoding=async prevents main-thread freeze during image decode */}
+                  <img src={fishOutline} alt="Fish illustration" className="relative z-10 w-full h-auto object-contain brightness-125 drop-shadow-2xl" loading="lazy" decoding="async" />
+                </div>
               </motion.div>
 
               {/* Numbered Points - Tied strictly to our new perfectly chained scroll math */}
@@ -346,25 +371,54 @@ const FoundationSection = () => {
               variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.3 }}
             >
               {/* Squid Image (Front when Squid is active, Back when Shrimp is active) */}
+              {/* Step 1 — `layout` prop uses FLIP math so Framer animates via GPU transforms
+                   instead of recalculating layout for every `left`/`width`/`height` change. */}
+              {/* Step 2 — willChange ensures the browser pre-promotes this to a GPU layer. */}
               <motion.div
+                layout
                 className="absolute shadow-2xl overflow-hidden"
                 variants={cardVariants}
                 animate={activeProduct === 'squid' ? 'active' : 'inactive'}
                 initial={false} // Prevents animation on initial page load
+                style={{ willChange: 'transform, opacity' }}
               >
-                {activeProduct !== 'squid' && <div className="absolute inset-0 bg-[#001321]/20 z-10 pointer-events-none"></div>}
-                <img src={products.squid.mainImg} alt="Squid" className="w-full h-full object-cover relative z-0" />
+                {/* Step 3 — opacity-only overlay replaces the filter animation (brightness/grayscale).  
+                     Animating opacity is free for the GPU; animating filter is very expensive. */}
+                <motion.div
+                  className="absolute inset-0 bg-[#001321] mix-blend-color z-10 pointer-events-none"
+                  variants={overlayVariants}
+                  animate={activeProduct === 'squid' ? 'active' : 'inactive'}
+                  initial={false}
+                />
+                <div className="relative w-full h-full overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+                  <Skeleton className="absolute inset-0 z-0" />
+                  {/* Step 4 — decoding=async prevents main-thread freeze during image decode */}
+                  <img src={products.squid.mainImg} alt="Squid" className="relative z-10 w-full h-full object-cover" loading="lazy" decoding="async" />
+                </div>
               </motion.div>
 
               {/* Shrimp Image (Front when Shrimp is active, Back when Squid is active) */}
+              {/* Step 1 — `layout` prop, same FLIP rationale as Squid card above. */}
               <motion.div
+                layout
                 className="absolute shadow-2xl overflow-hidden hidden md:block" // Hidden on mobile so it doesn't break layout
                 variants={cardVariants}
                 animate={activeProduct === 'shrimp' ? 'active' : 'inactive'}
                 initial={false}
+                style={{ willChange: 'transform, opacity' }}
               >
-                 {activeProduct !== 'shrimp' && <div className="absolute inset-0 bg-[#001321]/20 z-10 pointer-events-none"></div>}
-                <img src={products.shrimp.mainImg} alt="Shrimp" className="w-full h-full object-cover relative z-0" />
+                {/* Step 3 — opacity-only overlay, same rationale as Squid card. */}
+                <motion.div
+                  className="absolute inset-0 bg-[#001321] mix-blend-color z-10 pointer-events-none"
+                  variants={overlayVariants}
+                  animate={activeProduct === 'shrimp' ? 'active' : 'inactive'}
+                  initial={false}
+                />
+                <div className="relative w-full h-full overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+                  <Skeleton className="absolute inset-0 z-0" />
+                  {/* Step 4 — decoding=async prevents main-thread freeze during image decode */}
+                  <img src={products.shrimp.mainImg} alt="Shrimp" className="relative z-10 w-full h-full object-cover" loading="lazy" decoding="async" />
+                </div>
               </motion.div>
             </motion.div>
 

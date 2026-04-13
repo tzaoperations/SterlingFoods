@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import ScrollToTop from './components/layout/ScrollToTop';
+import SmoothScroll from './components/layout/SmoothScroll';
 import Home from './pages/Home';
 
 // Active Pages
@@ -18,10 +19,11 @@ import Yacht from './pages/Yacht';
 function App() {
   return (
     <Router>
-      <ScrollToTop />
-      <div className="min-h-screen bg-white font-sans text-slate-900">
-        <Navbar />
-        <main>
+      <SmoothScroll>
+        <ScrollToTop />
+        <div className="min-h-screen bg-white font-sans text-slate-900">
+          <Navbar />
+          <main>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/our-story" element={<OurStory />} />
@@ -36,7 +38,8 @@ function App() {
           </Routes>
         </main>
         <Footer /> 
-      </div>
+        </div>
+      </SmoothScroll>
     </Router>
   );
 }

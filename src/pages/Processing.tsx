@@ -1,6 +1,9 @@
 import { useRef, useState } from 'react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, type Variants } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
+import Preloader from '../components/layout/Preloader';
+import Skeleton from '../components/layout/Skeleton';
+import { useAssetLoader } from '../hooks/useAssetLoader';
 
 // --- Asset Imports ---
 import heroImg from '../assets/images/processing/hero.png';
@@ -149,6 +152,7 @@ const processingSteps = [
 ];
 
 const ProcessingPage = () => {
+  const isPageLoading = useAssetLoader([heroImg]);
   // --- Scroll Tracking State ---
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -218,8 +222,10 @@ const ProcessingPage = () => {
   const activeStep = processingSteps[activeIndex];
 
   return (
-    <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-0">
-      <Navbar />
+    <>
+      <Preloader isLoading={isPageLoading} />
+      <div className="w-full bg-[#001321] text-[#C7D2D9] overflow-clip flex flex-col pb-0">
+        <Navbar />
 
       {/* ═══════════════════════════════════════════════════
           SECTION 1 — HERO
@@ -332,11 +338,15 @@ const ProcessingPage = () => {
               exit="exit"
               className="absolute left-[52.55%] w-[42.96%] h-[83.7%] flex items-center justify-center overflow-hidden shadow-2xl"
             >
-              <img 
-                src={activeStep.image} 
-                alt={activeStep.titleFirst} 
-                className="w-full h-full object-cover" 
-              />
+              <div className="relative w-full h-full overflow-hidden">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img 
+                  src={activeStep.image} 
+                  alt={activeStep.titleFirst as string} 
+                  className="relative z-10 w-full h-full object-cover" 
+                  loading="lazy"
+                />
+              </div>
             </motion.div>
 
           </AnimatePresence>
@@ -344,7 +354,8 @@ const ProcessingPage = () => {
         </div>
       </div>
 
-    </div>
+      </div>
+    </>
   );
 };
 
