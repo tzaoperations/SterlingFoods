@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useScroll, useTransform } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
 import Preloader from '../components/layout/Preloader';
 import Skeleton from '../components/layout/Skeleton';
@@ -12,7 +12,8 @@ import squidImg from '../assets/images/products/squid/squid.png';
 import hoverImg from '../assets/images/products/squid/hover.png';
 import gal1 from '../assets/images/products/squid/1.png';
 import gal2 from '../assets/images/products/squid/2.png';
-import gal3 from '../assets/images/products/squid/3.png';
+// gal3 replaced by mainImg for the expanding center
+import gal3 from '../assets/images/products/squid/3.png'; 
 import gal5 from '../assets/images/products/squid/5.png';
 import gal6 from '../assets/images/products/squid/6.png';
 import mainImg from '../assets/images/products/squid/main.png';
@@ -28,7 +29,8 @@ const productShapes = [
 ];
 
 const SquidPage = () => {
-  const isPageLoading = useAssetLoader([squidImg, squid2Img]);
+  // Added mainImg to the preloader to guarantee a smooth transition
+  const isPageLoading = useAssetLoader([squidImg, squid2Img, mainImg]);
 
   // --- Cursor Tracking State for Section 2 ---
   const [hoveredShape, setHoveredShape] = useState<string | null>(null);
@@ -47,6 +49,33 @@ const SquidPage = () => {
     mouseX.set(e.clientX - rect.left);
     mouseY.set(e.clientY - rect.top);
   };
+
+  // ═══════════════════════════════════════════════════
+  // SCROLL ANIMATION LOGIC FOR THE CINEMATIC GALLERY
+  // ═══════════════════════════════════════════════════
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: galleryRef,
+    offset: ["start start", "end end"]
+  });
+
+  // --- THE HOLDING PHASE (400vh total container) ---
+  const holdStart = 0.2;
+  const animEnd = 0.7; 
+
+  // 1. Center Image Expands (Bypassing Framer Motion's unit parser via calc)
+  const expandProgress = useTransform(scrollYProgress, [holdStart, animEnd], [0, 1]);
+  const centerW = useTransform(expandProgress, (p) => `calc(28.12vw + ((100vw - 28.12vw) * ${p}))`);
+  const centerH = useTransform(expandProgress, (p) => `calc(34.06vw + ((100vh - 34.06vw) * ${p}))`);
+
+  // 2. Side Images slide outwards and fade away
+  const sideXLeft = useTransform(scrollYProgress, [holdStart, 0.6], ["0vw", "-15vw"]);
+  const sideXRight = useTransform(scrollYProgress, [holdStart, 0.6], ["0vw", "15vw"]);
+  const sideOpacity = useTransform(scrollYProgress, [holdStart, 0.5], [1, 0]);
+
+  // 3. Title fades and scrolls up out of the way
+  const titleY = useTransform(scrollYProgress, [holdStart, 0.6], ["0%", "-100%"]);
+  const titleOpacity = useTransform(scrollYProgress, [holdStart, 0.45], [1, 0]);
 
   const MixedHeading = ({ firstLetter, restOfText, className, style }: { firstLetter: React.ReactNode, restOfText: React.ReactNode, className?: string, style?: React.CSSProperties }) => (
     <h2 className={`text-[#C7D2D9] ${className}`} style={style}>
@@ -77,8 +106,8 @@ const SquidPage = () => {
       ═══════════════════════════════════════════════════ */}
       <div className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[800px] mt-[100px]" style={{ containerType: 'inline-size' }}>
         
-        <img src={squid2Img} alt="Whole squid" className="absolute left-[4.06%] top-[7%] w-[10.52%] h-[22.59%] object-cover shadow-2xl" />
-        <img src={squidImg} alt="Squid close-up" className="absolute left-[58.54%] top-[7%] w-[38.33%] h-[81.57%] object-cover shadow-2xl" />
+        <img src={squid2Img} alt="Whole squid" className="absolute left-[4.06%] top-[7%] w-[10.52%] h-[22.59%] object-cover shadow-2xl" style={{ transform: 'translateZ(0)' }} />
+        <img src={squidImg} alt="Squid close-up" className="absolute left-[58.54%] top-[7%] w-[38.33%] h-[81.57%] object-cover shadow-2xl" style={{ transform: 'translateZ(0)' }} />
 
         <MixedHeading 
           firstLetter="S" 
@@ -122,7 +151,6 @@ const SquidPage = () => {
               key={shape.id}
               onMouseEnter={() => setHoveredShape(shape.id)}
               onMouseLeave={() => setHoveredShape(null)}
-              // Changed from transition-all to transition-colors so italic snaps instantly
               className={`font-seasons capitalize cursor-default transition-colors duration-150 w-max ${
                 hoveredShape === shape.id 
                   ? 'italic text-[#C7D2D9]' 
@@ -149,7 +177,6 @@ const SquidPage = () => {
               style={{
                 x: springX,
                 y: springY,
-                // These coordinates put the bottom-left corner directly on the cursor
                 translateX: '0%',
                 translateY: '-100%'
               }}
@@ -166,60 +193,68 @@ const SquidPage = () => {
       </div>
 
       {/* ═══════════════════════════════════════════════════
-          SECTION 3 — IN ITS TRUE FORM & GALLERY
+          SECTION 3 & 4 COMBINED — CINEMATIC FULLSCREEN GALLERY
       ═══════════════════════════════════════════════════ */}
-      <div className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[800px]" style={{ containerType: 'inline-size' }}>
-        
-        <MixedHeading 
-          firstLetter="I" 
-          restOfText={<>N ITS <br /> TRUE FORM</>}
-          className="absolute left-[3.125%] top-[7.4%] w-max whitespace-nowrap"
-          style={{ fontSize: 'clamp(1.8rem, 3.5cqw, 72px)' }}
-        />
+      <div ref={galleryRef} className="relative w-full h-[400vh] mt-16 md:mt-0 z-20">
+          
+          <div className="sticky top-0 w-full h-screen overflow-hidden bg-[#001321]">
 
-        <div className="absolute top-[25.46%] w-full px-[3.125%] flex flex-row items-center justify-between gap-[2cqw]">
-          <div className="relative w-[10.1%] aspect-[194/216] overflow-hidden shadow-xl">
-            <Skeleton className="absolute inset-0 z-0" />
-            <img src={gal1} alt="Gallery 1" className="relative z-10 w-full h-full object-cover" loading="lazy" />
-          </div>
-          <div className="relative w-[19.11%] aspect-[367/430] overflow-hidden shadow-xl">
-            <Skeleton className="absolute inset-0 z-0" />
-            <img src={gal2} alt="Gallery 2" className="relative z-10 w-full h-full object-cover" loading="lazy" />
-          </div>
-          <div className="relative w-[28.12%] aspect-[540/654] overflow-hidden shadow-2xl">
-            <Skeleton className="absolute inset-0 z-0" />
-            <img src={gal3} alt="Gallery 3" className="relative z-10 w-full h-full object-cover" loading="lazy" />
-          </div>
-          <div className="relative w-[19.11%] aspect-[367/430] overflow-hidden shadow-xl">
-            <Skeleton className="absolute inset-0 z-0" />
-            <img src={gal5} alt="Gallery 4" className="relative z-10 w-full h-full object-cover" loading="lazy" />
-          </div>
-          <div className="relative w-[10.1%] aspect-[194/216] overflow-hidden shadow-xl">
-            <Skeleton className="absolute inset-0 z-0" />
-            <img src={gal6} alt="Gallery 5" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+            {/* LAYER 0 — Animated Title */}
+            <motion.div
+              style={{ opacity: titleOpacity, y: titleY }}
+              className="absolute left-[3.125vw] top-[10vh] z-30 pointer-events-none"
+            >
+              <MixedHeading
+                firstLetter="I" restOfText={<>N ITS <br /> TRUE FORM</>}
+                className="w-max whitespace-nowrap"
+                style={{ fontSize: 'clamp(1.8rem, 3.5vw, 72px)' }}
+              />
+            </motion.div>
+
+            {/* LAYER 1 — Flex row with perfect Figma gap and center justification */}
+            <div className="absolute inset-0 flex flex-row items-center justify-center gap-[2.08vw] px-[3.125vw] z-10 pointer-events-none">
+
+              <motion.div style={{ x: sideXLeft, opacity: sideOpacity }} className="relative w-[10.1vw] aspect-[194/216] overflow-hidden shadow-xl shrink-0">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={gal1} alt="Gallery 1" className="relative z-10 w-full h-full object-cover" loading="lazy" decoding="async" />
+              </motion.div>
+
+              <motion.div style={{ x: sideXLeft, opacity: sideOpacity }} className="relative w-[19.11vw] aspect-[367/430] overflow-hidden shadow-xl shrink-0">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={gal2} alt="Gallery 2" className="relative z-10 w-full h-full object-cover" loading="lazy" decoding="async" />
+              </motion.div>
+
+              {/* INVISIBLE PLACEHOLDER — mathematically exact Figma dimensions */}
+              <div className="relative w-[28.12vw] aspect-[540/654] invisible shrink-0" />
+
+              <motion.div style={{ x: sideXRight, opacity: sideOpacity }} className="relative w-[19.11vw] aspect-[367/430] overflow-hidden shadow-xl shrink-0">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={gal5} alt="Gallery 4" className="relative z-10 w-full h-full object-cover" loading="lazy" decoding="async" />
+              </motion.div>
+
+              <motion.div style={{ x: sideXRight, opacity: sideOpacity }} className="relative w-[10.1vw] aspect-[194/216] overflow-hidden shadow-xl shrink-0">
+                <Skeleton className="absolute inset-0 z-0" />
+                <img src={gal6} alt="Gallery 5" className="relative z-10 w-full h-full object-cover" loading="lazy" decoding="async" />
+              </motion.div>
+
+            </div>
+
+            {/* LAYER 2 — Absolute Center Image */}
+            <motion.div
+              style={{ width: centerW, height: centerH, x: "-50%", y: "-50%", willChange: 'width, height' }}
+              className="absolute z-20 overflow-hidden shadow-2xl top-1/2 left-1/2 bg-[#001321]"
+            >
+              <Skeleton className="absolute inset-0 z-0" />
+              <img src={mainImg} alt="Main squid dish" className="absolute inset-0 w-full h-full object-cover" style={{ transform: 'translateZ(0)' }} loading="lazy" decoding="async" />
+            </motion.div>
+
           </div>
         </div>
-      </div>
-
-      {/* ═══════════════════════════════════════════════════
-          SECTION 4 — MASSIVE MAIN IMAGE
-      ═══════════════════════════════════════════════════ */}
-      <div className="w-full max-w-[1920px] mx-auto my-12">
-        <div className="relative w-full aspect-video overflow-hidden shadow-2xl">
-          <Skeleton className="absolute inset-0 z-0" />
-          <img 
-            src={mainImg} 
-            alt="Main squid dish" 
-            className="relative z-10 w-full h-full object-cover" 
-            loading="lazy"
-          />
-        </div>
-      </div>
 
       {/* ═══════════════════════════════════════════════════
           SECTION 5 — YOU MAY ALSO LIKE
       ═══════════════════════════════════════════════════ */}
-      <div className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[600px]" style={{ containerType: 'inline-size' }}>
+      <div className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[600px] mt-24" style={{ containerType: 'inline-size' }}>
         
         <MixedHeading 
           firstLetter="Y" 
@@ -236,6 +271,8 @@ const SquidPage = () => {
               alt="Vannamei Shrimp" 
               className="relative z-10 w-full h-full object-cover" 
               loading="lazy"
+              decoding="async"
+              style={{ transform: 'translateZ(0)' }}
             />
           </div>
           

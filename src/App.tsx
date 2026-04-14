@@ -19,8 +19,8 @@ import Yacht from './pages/Yacht';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <SmoothScroll>
-        <ScrollToTop />
         <div className="min-h-screen bg-white font-sans text-slate-900">
           <Navbar />
           <main>
