@@ -12,11 +12,11 @@ import heritage_vertical from '../../assets/images/home/heritage1.png';
 import shrimpIcon from '../../assets/shrimpicon.png';
 // Add these to your existing Asset Imports at the top:
 import squidIcon from '../../assets/squidicon.png';
-import squidToggleImg from '../../assets/images/home/squid2.png'; 
+import squidToggleImg from '../../assets/images/home/squid2.png';
 
 // Make sure you import your Shrimp display images too!
-import shrimpMainImg from '../../assets/images/home/heritage2.png'; // Replace with actual
-import shrimpToggleImg from '../../assets/images/home/shrimp1.png'; // Replace with actual
+import shrimpMainImg from '../../assets/images/home/shrimp1.png'; // Replace with actual
+import shrimpToggleImg from '../../assets/images/our-story/19704.jpg'; // Replace with actual
 
 const FoundationSection = () => {
   const [activeProduct, setActiveProduct] = useState<'squid' | 'shrimp'>('squid');
@@ -29,27 +29,27 @@ const FoundationSection = () => {
     offset: ["start start", "end end"] 
   });
 
-  const p1Op = useTransform(scrollYProgress, [0.05, 0.15], [0, 1]);
+  const p1Op = useTransform(scrollYProgress, [0.05, 0.10], [0, 1]);
 
-  const p1Y = useTransform(scrollYProgress, [0.05, 0.15], [50, 0]);
-
-
-
-  const p2Op = useTransform(scrollYProgress, [0.15, 0.25], [0, 1]);
-
-  const p2Y = useTransform(scrollYProgress, [0.15, 0.25], [50, 0]);
+  const p1Y = useTransform(scrollYProgress, [0.05, 0.10], [50, 0]);
 
 
 
-  const p3Op = useTransform(scrollYProgress, [0.25, 0.35], [0, 1]);
+  const p2Op = useTransform(scrollYProgress, [0.10, 0.15], [0, 1]);
 
-  const p3Y = useTransform(scrollYProgress, [0.25, 0.35], [50, 0]);
+  const p2Y = useTransform(scrollYProgress, [0.10, 0.15], [50, 0]);
 
 
 
-  const p4Op = useTransform(scrollYProgress, [0.35, 0.45], [0, 1]);
+  const p3Op = useTransform(scrollYProgress, [0.15, 0.20], [0, 1]);
 
-  const p4Y = useTransform(scrollYProgress, [0.35, 0.45], [50, 0]);
+  const p3Y = useTransform(scrollYProgress, [0.15, 0.20], [50, 0]);
+
+
+
+  const p4Op = useTransform(scrollYProgress, [0.20, 0.25], [0, 1]);
+
+  const p4Y = useTransform(scrollYProgress, [0.20, 0.25], [50, 0]);
   // --------------------------------
 
   const fadeIn: Variants = {
@@ -178,7 +178,7 @@ const FoundationSection = () => {
 
        {/* --- 2. OPERATING PROGRAMS SECTION (Pinned Scroll Sequence) --- */}
         {/* Reduced to h-[300vh] for a tighter, faster scroll experience */}
-        <div ref={programsRef} className="relative w-full h-[1100vh] mb-32 z-20">
+        <div ref={programsRef} className="relative w-full h-[600vh] mb-32 z-20">
           
           {/* CRITICAL: overflow-visible ensures the fish is NEVER chopped in half */}
           <div className="sticky top-0 w-full h-screen flex flex-col justify-center items-center overflow-visible bg-[#001321]">
@@ -202,7 +202,7 @@ const FoundationSection = () => {
 
               {/* Central Illustration (Fish) - Disconnected from scroll, triggers immediately! */}
               {/* Step 2 — heavy scroll-driven element gets its own GPU layer */}
-              <motion.div 
+              {/* <motion.div 
                 className="absolute top-[-37.6%] left-[45%] w-[90%] md:w-[40%] pointer-events-none z-0"
                 initial={{ opacity: 0, y: 50 }} 
                 whileInView={{ opacity: 1, y: 0 }} 
@@ -211,11 +211,11 @@ const FoundationSection = () => {
                 style={{ willChange: 'transform, opacity' }}
               >
                 <div className="relative w-full h-full overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-                  <Skeleton className="absolute inset-0 z-0 bg-transparent animate-none" />
+                  <Skeleton className="absolute inset-0 z-0 bg-transparent animate-none" /> */}
                   {/* Step 4 — decoding=async prevents main-thread freeze during image decode */}
-                  <img src={fishOutline} alt="Fish illustration" className="relative z-10 w-full h-auto object-contain brightness-125 drop-shadow-2xl" loading="lazy" decoding="async" />
+                  {/* <img src={fishOutline} alt="Fish illustration" className="relative z-10 w-full h-auto object-contain brightness-125 drop-shadow-2xl" loading="lazy" decoding="async" />
                 </div>
-              </motion.div>
+              </motion.div> */}
 
               {/* Numbered Points - Tied strictly to our new perfectly chained scroll math */}
               <motion.div className="absolute top-[39.9%] left-[4.6%] z-10" style={{ opacity: p1Op, y: p1Y }}>

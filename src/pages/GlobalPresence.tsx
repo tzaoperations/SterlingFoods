@@ -208,8 +208,8 @@ const GlobalPresencePage = () => {
             className="absolute inset-0 z-0"
           >
             <div className="relative w-full h-full overflow-hidden">
-              <Skeleton className="absolute inset-0 z-0" />
-              <img src={mapImg} alt="Global Export Map" className="relative w-full h-full object-contain pointer-events-none z-10" loading="lazy" />
+              {/* REMOVED: Skeleton loader deleted from here so it doesn't bleed through the transparent map */}
+              <img src={mapImg} alt="Global Export Map" className="relative w-full h-full object-contain pointer-events-none z-10" loading="lazy" decoding="async" />
             </div>
           </motion.div>
 

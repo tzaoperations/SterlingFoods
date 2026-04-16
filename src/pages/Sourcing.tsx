@@ -11,7 +11,7 @@ import heroImg from '../assets/images/sourcing/hero.png';
 import phil1 from '../assets/images/sourcing/philosophy1.png';
 import phil2 from '../assets/images/sourcing/philosophy2.png';
 import squid1 from '../assets/images/sourcing/squid1.png';
-import squid2 from '../assets/images/sourcing/squid2.png';
+import squid2 from '../assets/images/sourcing/squid2.jpg';
 import shrimp1 from '../assets/images/sourcing/shrimp1.png';
 import shrimp2 from '../assets/images/sourcing/shrimp2.png';
 import sourcesImg from '../assets/images/sourcing/sources.png';
@@ -26,6 +26,12 @@ import aeo from '../assets/images/standards/aeo.png';
 import fssai from '../assets/images/standards/fssai.png';
 import brc from '../assets/images/standards/brc.png';
 import fda from '../assets/images/standards/fda.png';
+
+//sources
+import proven from '../assets/images/sourcing/ProvenCompliance.png';
+import traceability from '../assets/images/sourcing/Labeling.png';
+import stability from '../assets/images/sourcing/Stability.png';
+import ability from '../assets/images/sourcing/Ability.png';
 
 const topRowLogos = [haccp, ssop, gmp, india, eu];
 const bottomRowLogos = [aeo, fssai, brc, fda];
@@ -310,25 +316,25 @@ const SourcingPage = () => {
             <RevealRow 
               title="Proven compliance history" 
               text="Raw shrimp is sourced from authorised farms operating under regulated oversight and export compliance protocols."
-              imageSrc={sourcesImg} 
+              imageSrc={proven} 
               isBold={false}
             />
             <RevealRow 
               title="Full traceability" 
               text="Every batch can be traced back to its origin, ensuring clarity in both process and accountability."
-              imageSrc={squid1} 
+              imageSrc={traceability} 
               isBold={true}
             />
             <RevealRow 
               title="Stability of supply" 
               text="We prioritise sources that deliver consistent quality, season after season, without fluctuation."
-              imageSrc={shrimp2} 
+              imageSrc={stability} 
               isBold={true}
             />
             <RevealRow 
               title="Ability to follow our systems" 
               text="Partners must demonstrate disciplined operational practices aligned with our internal standards."
-              imageSrc={squid2} 
+              imageSrc={ability} 
               isBold={true}
             />
           </motion.div>

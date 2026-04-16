@@ -12,16 +12,43 @@ import legacy1 from '../assets/images/our-story/legacy1.png';
 import story2 from '../assets/images/our-story/story2.png';
 import story1 from '../assets/images/our-story/story1.png';
 import bubblesImg from '../assets/bubbles.png'; 
+import img1of1970 from '../assets/images/our-story/19701.jpg';
+import img2of1970 from '../assets/images/our-story/19702.png';
+import img3of1970 from '../assets/images/our-story/19703.jpg';
+import img4of1970 from '../assets/images/our-story/19704.jpg';
+import mangalore1 from '../assets/images/our-story/mangalore1.png';
+import img1of1995 from '../assets/images/our-story/Cuttlefish.jpg';
+import img2of1995 from '../assets/images/our-story/squid.jpg';
+import img1of1996 from '../assets/images/our-story/19961.jpg';
+import img2of1996 from '../assets/images/our-story/19962.jpg';
+import img1of1990 from '../assets/images/our-story/19901.jpg';
+import img1of1997 from '../assets/images/our-story/19971.jpg';
+import img2of1997 from '../assets/images/our-story/19972.jpg';
+import img1of1998 from '../assets/images/our-story/19981.png';
+import img2of1990 from '../assets/images/our-story/19902.jpg';
+// import img1of1999 from '../assets/images/our-story/19991.jpg';
+// import img2of1999 from '../assets/images/our-story/19992.jpg';
+// import img1of2000 from '../assets/images/our-story/20001.jpg';
+// import img2of2000 from '../assets/images/our-story/20002.jpg';
+// import img1of2003 from '../assets/images/our-story/20031.jpg';
+// import img2of2003 from '../assets/images/our-story/20032.jpg';
+// import img1of2010 from '../assets/images/our-story/20101.jpg';
+// import img2of2010 from '../assets/images/our-story/20102.jpg';
+// import img1of2011 from '../assets/images/our-story/20111.jpg';
+// import img2of2011 from '../assets/images/our-story/20112.jpg';
+// import img1of2020 from '../assets/images/our-story/20201.jpg';
+// import img2of2020 from '../assets/images/our-story/20202.jpg';
+
 
 // --- Timeline Data Mapping (13 Entries, 2 Images Per Phase) ---
 // Note: I alternated the imported images as placeholders. Replace with your actual phase assets!
 const timelineData = [
-  { year: '1970', label: '1970', text: 'Founded in Mangalore, India.', imageLeft: story2, imageRight: story1 },
-  { year: '1970', label: '1970', text: 'Commenced exclusive shrimp processing for the Japanese market in partnership with Taiyo Fishery Company, Limited.', imageLeft: legacy1, imageRight: legacy2 },
-  { year: '1990', label: '1990', text: 'Concluded the two-decade exclusive shrimp processing program for the Japanese market.', imageLeft: story1, imageRight: story2 },
-  { year: '1995', label: '1995', text: 'Exclusive processing of sashimi-grade squid fillets and cuttlefish fillets for the Japanese market through Hero Corporation, Limited.', imageLeft: legacy2, imageRight: legacy1 },
-  { year: '1996', label: '1996', text: 'Strategic expansion into fish processing for the Chinese market through an exclusive arrangement with China International Fisheries (Hong Kong) Limited.', imageLeft: story2, imageRight: story1 },
-  { year: '1997', label: '1997', text: 'Exclusive export program for green mussels to South Africa.', imageLeft: legacy1, imageRight: legacy2 },
+  { year: '1970', label: '1970', text: 'Founded in Mangalore, India.', imageLeft: img1of1970, imageRight: img2of1970 },
+  { year: '1970', label: '1970', text: 'Commenced exclusive shrimp processing for the Japanese market in partnership with Taiyo Fishery Company, Limited.', imageLeft: img4of1970, imageRight: img3of1970 },
+  { year: '1990', label: '1990', text: 'Concluded the two-decade exclusive shrimp processing program for the Japanese market.', imageLeft: img2of1990, imageRight: img1of1990 },
+  { year: '1995', label: '1995', text: 'Exclusive processing of sashimi-grade squid fillets and cuttlefish fillets for the Japanese market through Hero Corporation, Limited.', imageLeft: img1of1995, imageRight: img2of1995 },
+  { year: '1996', label: '1996', text: 'Strategic expansion into fish processing for the Chinese market through an exclusive arrangement with China International Fisheries (Hong Kong) Limited.', imageLeft: img2of1996, imageRight: img1of1996 },
+  { year: '1997', label: '1997', text: 'Exclusive export program for green mussels to South Africa.', imageLeft: img2of1997, imageRight: img1of1997 },
   { year: '1998', label: '1998', text: 'Exclusive supply of headless Black Tiger shrimp to Japan in partnership with Nissho Iwai Corporation.', imageLeft: story1, imageRight: story2 },
   { year: '1999', label: '1999', text: 'Development and supply of a Yacht brand premium squid program for the United States through a long-standing exclusive private partnership.', imageLeft: legacy2, imageRight: legacy1 },
   { year: '2000', label: '2000', text: 'Exclusive supply of head-on Black Tiger shrimp to France, in collaboration with CRUSTIMEX.', imageLeft: story2, imageRight: story1 },
@@ -148,7 +175,7 @@ const OurStoryPage = () => {
         >
           <div className="relative w-full h-full overflow-hidden">
             <Skeleton className="absolute inset-0 z-0" />
-            <img src={legacy2} alt="Processing lines" className="relative z-10 w-full h-full object-cover" loading="lazy" />
+            <img src={mangalore1} alt="Processing lines" className="relative z-10 w-full h-full object-cover" loading="lazy" />
           </div>
         </motion.div>
 

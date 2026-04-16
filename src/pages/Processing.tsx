@@ -9,8 +9,14 @@ import { useAssetLoader } from '../hooks/useAssetLoader';
 import heroImg from '../assets/images/processing/hero.png';
 import squidImg from '../assets/images/processing/squid.png';
 // Add your other images here:
-// import prepImg from '../assets/images/processing/prep.png';
-// import gradingImg from '../assets/images/processing/grading.png';
+import one from '../assets/images/processing/1.png';
+import two from '../assets/images/processing/2.png';
+import three from '../assets/images/processing/3.png';
+import four from '../assets/images/processing/4.png';
+import five from '../assets/images/processing/5.png';
+import six from '../assets/images/processing/6.png';
+import seven from '../assets/images/processing/7.png';
+
 
 // --- Carousel Data Mapping ---
 const processingSteps = [
@@ -30,7 +36,7 @@ const processingSteps = [
       }
     ],
     footer: '*Non-compliant material does not enter production.',
-    image: squidImg // Replace with actual step 1 image
+    image: one // Replace with actual step 1 image
   },
   {
     stepNum: 'STEP 2/7',
@@ -48,7 +54,7 @@ const processingSteps = [
       }
     ],
     footer: '*Time between intake and freezing is tightly controlled.',
-    image: heroImg // Replace with actual step 2 image
+    image: two // Replace with actual step 2 image
   },
   {
     stepNum: 'STEP 3/7',
@@ -66,7 +72,7 @@ const processingSteps = [
       }
     ],
     footer: '*Specifications are confirmed before freezing.',
-    image: squidImg // Replace with actual step 3 image
+    image: three // Replace with actual step 3 image
   },
   {
     stepNum: 'STEP 4/7',
@@ -85,7 +91,7 @@ const processingSteps = [
       }
     ],
     footer: '*Freezing parameters are monitored and documented.',
-    image: heroImg // Replace with actual step 4 image
+    image: four // Replace with actual step 4 image
   },
   {
     stepNum: 'STEP 5/7',
@@ -111,7 +117,7 @@ const processingSteps = [
       }
     ],
     footer: null,
-    image: squidImg // Replace with actual step 5 image
+    image: five // Replace with actual step 5 image
   },
   {
     stepNum: 'STEP 6/7',
@@ -130,7 +136,7 @@ const processingSteps = [
       }
     ],
     footer: '*Laboratory systems operate in alignment with export market requirements across Asia, the United States, and Europe.',
-    image: heroImg // Replace with actual step 6 image
+    image: six // Replace with actual step 6 image
   },
   {
     stepNum: 'STEP 7/7',
@@ -147,7 +153,7 @@ const processingSteps = [
       }
     ],
     footer: '*Cold chain integrity is maintained until loading.',
-    image: squidImg // Replace with actual step 7 image
+    image: seven // Replace with actual step 7 image
   }
 ];
 

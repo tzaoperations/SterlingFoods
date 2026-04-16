@@ -128,8 +128,8 @@ const GlobalSection = () => {
           className="absolute inset-0 z-0"
         >
           <div className="relative w-full h-full overflow-hidden">
-            <Skeleton className="absolute inset-0 z-0" />
-            <img src={mapImg} alt="Global Export Map" className="relative w-full h-full object-contain pointer-events-none z-10" loading="lazy" />
+            {/* REMOVED: The Skeleton loader was bleeding through the transparent map */}
+            <img src={mapImg} alt="Global Export Map" className="relative w-full h-full object-contain pointer-events-none z-10" loading="lazy" decoding="async" />
           </div>
         </motion.div>
 

@@ -16,38 +16,55 @@ const HeroSection = () => {
       </div>
 
       {/* --- DESKTOP LAYOUT (Perfect Scaling Canvas) --- */}
-      {/* max-w-[177.78vh] ensures the 16:9 canvas never overflows the screen vertically */}
       <div 
         className="hidden md:block relative z-10 w-full aspect-video max-h-screen max-w-[177.78vh] mx-auto pointer-events-none"
         style={{ containerType: 'inline-size' }}
       >
         
-        {/* TRUSTED - Scaled strictly to 7.29% of the container width */}
-        <h1 className="absolute font-seasons text-[#E6F1F8] drop-shadow-lg leading-none m-0 p-0"
-            style={{ top: '26%', left: '46.13%', fontSize: '7.29cqw' }}>
+        {/* ═ LAYER 1: BACKGROUND TEXT (z-10) ═ */}
+        
+        {/* TRUSTED (Back Layer) */}
+        <h1 className="absolute font-seasons text-[#E6F1F8] drop-shadow-lg leading-none m-0 p-0 z-10 whitespace-nowrap"
+            style={{ top: '22.68%', left: '42.13%', fontSize: '7.29cqw' }}>
           TRUSTED
         </h1>
 
         {/* SINCE */}
-        <h2 className="absolute font-seasons text-[#E6F1F8] drop-shadow-lg leading-none m-0 p-0"
-            style={{ top: '48.33%', left: '21.29%', fontSize: '7.29cqw' }}>
+        <h2 className="absolute font-seasons text-[#E6F1F8] drop-shadow-lg leading-none m-0 p-0 z-10 whitespace-nowrap"
+            style={{ top: '53.33%', left: '22.29%', fontSize: '7.29cqw' }}>
           SINCE
         </h2>
 
         {/* 1970 */}
-        <h1 className="absolute font-seasons text-[#E6F1F8] drop-shadow-xl leading-none m-0 p-0"
-            style={{ top: '61.37%', left: '40.93%', fontSize: '7.29cqw' }}>
+        <h1 className="absolute font-seasons text-[#E6F1F8] drop-shadow-xl leading-none m-0 p-0 z-10 whitespace-nowrap"
+            style={{ top: '65.37%', left: '40.93%', fontSize: '7.29cqw' }}>
           1970
         </h1>
 
-        {/* The Yacht - Locked to exactly 58.6% of the canvas width */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75%] pointer-events-none flex justify-center items-center">
+
+        {/* ═ LAYER 2: THE YACHT (z-20) ═ */}
+        {/* Figma Math: width 912px / 1920px = 47.5%. Center Y: 497px / 1080px = 46.07% */}
+        <div className="absolute left-[50%] -translate-x-1/2 -translate-y-1/2 w-[47.5%] pointer-events-none flex justify-center items-center z-20"
+             style={{ top: '46.07%' }}>
           <img 
             src={heroYacht} 
             alt="Sterling Foods Yacht" 
-            className="w-full h-full object-contain drop-shadow-2xl mt-[1%] -ml-[2%]" 
+            className="w-full h-auto object-contain drop-shadow-2xl" 
           />
         </div>
+
+
+        {/* ═ LAYER 3: FOREGROUND MASKED TEXT (z-30) ═ */}
+        {/* This container perfectly aligns with the right sail ropes and clips the text so only "TED" overlaps the yacht */}
+        <div className="absolute overflow-hidden z-30 pointer-events-none"
+             style={{ left: '50.83%', top: '22.68%', width: '24.32%', height: '14.72%' }}>
+          <h1 className="absolute font-seasons text-[#E6F1F8] drop-shadow-lg leading-none m-0 p-0 whitespace-nowrap"
+              // Shifting the inner text left by exactly 167px (-8.7cqw) to align perfectly over the back layer
+              style={{ top: '0', left: '-8.7cqw', fontSize: '7.29cqw' }}>
+            TRUSTED
+          </h1>
+        </div>
+
       </div>
 
       {/* --- MOBILE LAYOUT --- */}
@@ -56,8 +73,9 @@ const HeroSection = () => {
         <h2 className="w-full text-left font-seasons text-6xl text-[#E6F1F8] drop-shadow-lg pl-4 -mt-6">SINCE</h2>
         <h1 className="w-full text-center font-seasons text-6xl text-[#E6F1F8] drop-shadow-xl mt-6">1970</h1>
         
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] pointer-events-none">
-          <img src={heroYacht} alt="Sterling Foods Yacht" className="w-full h-full object-contain drop-shadow-2xl" />
+        {/* Scaled down slightly for better mobile fit */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] pointer-events-none z-20">
+          <img src={heroYacht} alt="Sterling Foods Yacht" className="w-full h-auto object-contain drop-shadow-2xl" />
         </div>
       </div>
 

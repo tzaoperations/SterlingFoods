@@ -13,12 +13,13 @@ import hoverImg from '../assets/images/products/squid/hover.png';
 import gal1 from '../assets/images/products/squid/1.png';
 import gal2 from '../assets/images/products/squid/2.png';
 // gal3 replaced by mainImg for the expanding center
-import gal3 from '../assets/images/products/squid/3.png'; 
-import gal5 from '../assets/images/products/squid/5.png';
-import gal6 from '../assets/images/products/squid/6.png';
+import gal3 from '../assets/images/products/squid/Image2.jpg'; 
+import gal5 from '../assets/images/products/squid/Image3.png';
+import gal6 from '../assets/images/products/squid/Image5.png';
 import mainImg from '../assets/images/products/squid/main.png';
 import shrimpImg from '../assets/images/products/shrimp.png';
 import starImg from '../assets/images/products/squid/star.png';
+import squidsmall from '../assets/images/products/squid/squidsmall.png';
 
 // --- Dynamic Data for the Hover Section ---
 const productShapes = [
@@ -106,7 +107,7 @@ const SquidPage = () => {
       ═══════════════════════════════════════════════════ */}
       <div className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[800px] mt-[100px]" style={{ containerType: 'inline-size' }}>
         
-        <img src={squid2Img} alt="Whole squid" className="absolute left-[4.06%] top-[7%] w-[10.52%] h-[22.59%] object-cover shadow-2xl" style={{ transform: 'translateZ(0)' }} />
+        <img src={squidsmall} alt="Whole squid" className="absolute left-[4.06%] top-[7%] w-[10.52%] h-[22.59%] object-cover shadow-2xl" style={{ transform: 'translateZ(0)' }} />
         <img src={squidImg} alt="Squid close-up" className="absolute left-[58.54%] top-[7%] w-[38.33%] h-[81.57%] object-cover shadow-2xl" style={{ transform: 'translateZ(0)' }} />
 
         <MixedHeading 
