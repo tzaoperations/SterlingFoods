@@ -88,7 +88,7 @@ const FoundationSection = () => {
       width: "68%", 
       height: "100%",
       zIndex: 20,
-      transition: { type: "spring", stiffness: 200, damping: 25 }
+      transition: { type: "spring" as const, stiffness: 200, damping: 25 }
     },
     inactive: { // Back, smaller, dark/grayscale
       left: "72%", 
@@ -96,14 +96,14 @@ const FoundationSection = () => {
       width: "28%",
       height: "85%",
       zIndex: 10,
-      transition: { type: "spring", stiffness: 200, damping: 25 }
+      transition: { type: "spring" as const, stiffness: 200, damping: 25 }
     }
   };
 
   // Step 3 — overlay variants: animating opacity is practically free for the GPU.
   const overlayVariants = {
-    active: { opacity: 0, transition: { duration: 0.35, ease: 'easeOut' } },
-    inactive: { opacity: 1, transition: { duration: 0.35, ease: 'easeOut' } },
+    active: { opacity: 0, transition: { duration: 0.35, ease: 'easeOut' as const } },
+    inactive: { opacity: 1, transition: { duration: 0.35, ease: 'easeOut' as const } },
   };
   return (
     <section className="relative w-full bg-[#001321] px-6 py-32 text-[#E6F1F8] md:px-12 lg:py-48">
