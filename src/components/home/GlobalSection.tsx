@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import Skeleton from '../layout/Skeleton';
+// import Skeleton from '../layout/Skeleton';
 
 // --- Asset Imports ---
 import mapImg from '../../assets/map.png'; 

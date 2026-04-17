@@ -24,7 +24,7 @@ import img2of1996 from '../assets/images/our-story/19962.jpg';
 import img1of1990 from '../assets/images/our-story/19901.jpg';
 import img1of1997 from '../assets/images/our-story/19971.jpg';
 import img2of1997 from '../assets/images/our-story/19972.jpg';
-import img1of1998 from '../assets/images/our-story/19981.png';
+// import img1of1998 from '../assets/images/our-story/19981.png';
 import img2of1990 from '../assets/images/our-story/19902.jpg';
 // import img1of1999 from '../assets/images/our-story/19991.jpg';
 // import img2of1999 from '../assets/images/our-story/19992.jpg';

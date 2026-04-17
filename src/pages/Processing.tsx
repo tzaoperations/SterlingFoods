@@ -7,7 +7,7 @@ import { useAssetLoader } from '../hooks/useAssetLoader';
 
 // --- Asset Imports ---
 import heroImg from '../assets/images/processing/hero.png';
-import squidImg from '../assets/images/processing/squid.png';
+// import squidImg from '../assets/images/processing/squid.png';
 // Add your other images here:
 import one from '../assets/images/processing/1.png';
 import two from '../assets/images/processing/2.png';
@@ -209,17 +209,17 @@ const ProcessingPage = () => {
   };
 
   // --- Slowed Down Carousel Animations ---
-  const customEase = [0.22, 1, 0.36, 1];
+  const customEase = [0.22, 1, 0.36, 1] as const;
 
   // Text flows UPWARDS (fades in from bottom, fades out to top)
-  const textVariants = {
+  const textVariants: Variants = {
     initial: { opacity: 0, y: 50 },
     animate: { opacity: 1, y: 0, transition: { duration: 1.5, ease: customEase } },
     exit: { opacity: 0, y: -50, transition: { duration: 1.2, ease: customEase } }
   };
 
   // Image flows DOWNWARDS (fades in from top, fades out to bottom)
-  const imageVariants = {
+  const imageVariants: Variants = {
     initial: { opacity: 0, y: -50 },
     animate: { opacity: 1, y: 0, transition: { duration: 1.5, ease: customEase } },
     exit: { opacity: 0, y: 50, transition: { duration: 1.2, ease: customEase } }

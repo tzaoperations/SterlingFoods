@@ -81,7 +81,7 @@ const ContactPage = () => {
         </motion.div>
 
         <motion.img 
-          variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, delay: 0.3 }}
+          variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.3 }}
           src={starfishImg} 
           alt="Starfish in water" 
           className="absolute left-[34.79%] top-[26.57%] w-[16.3%] aspect-square object-cover shadow-2xl" // Mapped to left: 668px, top: 287px

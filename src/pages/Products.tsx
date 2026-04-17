@@ -13,7 +13,7 @@ import squidImg from '../assets/images/products/squid.png';
 import yachtImg from '../assets/images/products/yatch.png';
 import squid2Img from '../assets/images/home/squid2.png';
 import quoteBg from '../assets/images/home/quotebg.png';
-import squidsmall from '../assets/images/products/squid/squidsmall.png';
+// import squidsmall from '../assets/images/products/squid/squidsmall.png';
 
 // ─── Scroll-Driven Word Component ────────────────────────────────────────────
 const Word = ({

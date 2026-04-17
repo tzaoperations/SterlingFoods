@@ -6,9 +6,9 @@ import Skeleton from '../layout/Skeleton';
 // Asset Imports
 import heritage1 from '../../assets/images/home/heritage1.png'; // Sauce Pouring
 import heritage2 from '../../assets/images/home/heritage2.png'; // Plated Shrimp
-import fishOutline from '../../assets/images/home/fishoutline.png';
+// import fishOutline from '../../assets/images/home/fishoutline.png';
 import squid1 from '../../assets/images/home/squid1.png';
-import heritage_vertical from '../../assets/images/home/heritage1.png'; 
+// import heritage_vertical from '../../assets/images/home/heritage1.png'; 
 import shrimpIcon from '../../assets/shrimpicon.png';
 // Add these to your existing Asset Imports at the top:
 import squidIcon from '../../assets/squidicon.png';
@@ -57,7 +57,7 @@ const FoundationSection = () => {
     visible: { 
       opacity: 1, 
       y: 0, 
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const } 
     }
   };
 // --- SIGNATURE PRODUCTS DATA ---

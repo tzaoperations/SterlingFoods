@@ -129,11 +129,11 @@ const YachtPage = () => {
         className="relative w-full aspect-video max-w-[1920px] mx-auto min-h-[800px] overflow-hidden bg-center bg-cover"
         style={{ backgroundImage: `url(${heroBg})`, containerType: 'inline-size' }}
       >
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, delay: 0.3 }} className="absolute left-[3.125%] top-[53.05%] w-max z-10 drop-shadow-lg">
+        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.3 }} className="absolute left-[3.125%] top-[53.05%] w-max z-10 drop-shadow-lg">
           <span className="font-seasons uppercase tracking-tight text-[#E6F1F8]" style={{ fontSize: 'clamp(3rem, 6.7cqw, 130px)' }}>INTRODUCING</span>
         </motion.div>
 
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, delay: 0.4 }} className="absolute left-[62.4%] top-[53.05%] w-max z-10 drop-shadow-lg">
+        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.4 }} className="absolute left-[62.4%] top-[53.05%] w-max z-10 drop-shadow-lg">
           <span className="font-seasons uppercase tracking-tight text-[#E6F1F8]" style={{ fontSize: 'clamp(3rem, 7.2cqw, 140px)' }}>YACHT</span>
         </motion.div>
 
@@ -145,16 +145,16 @@ const YachtPage = () => {
         </motion.div>
 
         <motion.img 
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, delay: 0.2 }} 
+          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }} 
           src={squidTop} alt="Squid" 
           className="absolute left-[50%] top-[45%] -translate-x-1/2 -translate-y-1/2 w-[100%] max-w-none h-auto object-contain z-30 drop-shadow-2xl" 
         />
 
-        <motion.p variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, delay: 0.5 }} className="absolute right-[3.125%] top-[59%] w-[13%] text-right font-poppins text-[#E6F1F8] drop-shadow-md z-40" style={{ fontSize: 'clamp(0.8rem, 1.25cqw, 24px)' }}>
+        <motion.p variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.5 }} className="absolute right-[3.125%] top-[59%] w-[13%] text-right font-poppins text-[#E6F1F8] drop-shadow-md z-40" style={{ fontSize: 'clamp(0.8rem, 1.25cqw, 24px)' }}>
           Yacht is Sterling’s premium squid sub brand, shaped quietly since 1970
         </motion.p>
         
-        <motion.p variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, delay: 0.6 }} className="absolute left-[38.4%] top-[78.8%] w-[22.6%] text-center font-poppins text-[#E6F1F8] z-40" style={{ fontSize: 'clamp(0.8rem, 1.25cqw, 24px)' }}>
+        <motion.p variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.6 }} className="absolute left-[38.4%] top-[78.8%] w-[22.6%] text-center font-poppins text-[#E6F1F8] z-40" style={{ fontSize: 'clamp(0.8rem, 1.25cqw, 24px)' }}>
           and reserved for partners who value consistency and refinement
         </motion.p>
       </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
 import Preloader from '../components/layout/Preloader';
-import Skeleton from '../components/layout/Skeleton';
+// import Skeleton from '../components/layout/Skeleton';
 import { useAssetLoader } from '../hooks/useAssetLoader';
 
 // --- Asset Imports ---

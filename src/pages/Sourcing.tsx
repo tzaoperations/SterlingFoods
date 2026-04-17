@@ -14,7 +14,7 @@ import squid1 from '../assets/images/sourcing/squid1.png';
 import squid2 from '../assets/images/sourcing/squid2.jpg';
 import shrimp1 from '../assets/images/sourcing/shrimp1.png';
 import shrimp2 from '../assets/images/sourcing/shrimp2.png';
-import sourcesImg from '../assets/images/sourcing/sources.png';
+// import sourcesImg from '../assets/images/sourcing/sources.png';
 
 // Industry Standards
 import haccp from '../assets/images/standards/haccp.png';

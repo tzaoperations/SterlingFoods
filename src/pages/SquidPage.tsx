@@ -13,7 +13,7 @@ import hoverImg from '../assets/images/products/squid/hover.png';
 import gal1 from '../assets/images/products/squid/1.png';
 import gal2 from '../assets/images/products/squid/2.png';
 // gal3 replaced by mainImg for the expanding center
-import gal3 from '../assets/images/products/squid/Image2.jpg'; 
+// import gal3 from '../assets/images/products/squid/Image2.jpg'; 
 import gal5 from '../assets/images/products/squid/Image3.png';
 import gal6 from '../assets/images/products/squid/Image5.png';
 import mainImg from '../assets/images/products/squid/main.png';
